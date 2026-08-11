@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#172a78" />
+<meta name="google" content="notranslate" />
+<meta name="robots" content="noindex" />
+<title>空き家データベース（デモ）｜BOARDWALK CAPITAL</title>
+<meta name="description" content="空き家データベースのデモです。掲載物件はすべて架空のサンプルデータです。" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Shippori+Mincho:wght@600;700;800&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#ffffff;--bg2:#f2f5fd;--panel:#ffffff;--navy:#172a78;
+  --blue:#2a53e6;--blue-bright:#1b3ec6;--ice:#2a53e6;
+  --text:#16234f;--muted:#46557c;--muted-2:#6f7ea2;
+  --line:rgba(10,28,63,.16);--line-soft:rgba(10,28,63,.09);
+  --maxw:1280px;--ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);
+  font-family:"Manrope","Zen Kaku Gothic New","Noto Sans JP",system-ui,sans-serif;
+  font-weight:500;font-size:16px;line-height:1.85;letter-spacing:.02em;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 36px}
+h1,h2,.serif{font-family:"Shippori Mincho","Zen Kaku Gothic New","Noto Sans JP",serif;font-weight:700;letter-spacing:.04em}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:120;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-soft);
+  box-shadow:0 8px 30px rgba(10,28,63,.06)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .bm{width:26px;height:26px;flex:0 0 26px;border:1px solid var(--navy);transform:rotate(45deg);position:relative}
+.brand .bm::before{content:"";position:absolute;inset:6px;background:var(--blue)}
+.wordmark{font-family:"Cinzel",serif;font-weight:600;font-style:italic;letter-spacing:.05em;white-space:nowrap;
+  color:#fff;background:var(--blue-bright);line-height:1;display:inline-block;border-radius:2px;
+  font-size:1.05rem;padding:.34em .6em}
+.nav-note{font-family:"Manrope";font-size:.72rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+
+/* HERO STRIP */
+.hero{background:linear-gradient(180deg,#0b1650 0%,#12246e 60%,#172a78 100%);color:#fff;
+  padding:88px 0 72px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;
+  border:1px solid rgba(255,255,255,.12);transform:rotate(45deg);pointer-events:none}
+.hero::before{content:"";position:absolute;right:-40px;top:-40px;width:260px;height:260px;
+  border:1px solid rgba(255,255,255,.08);transform:rotate(45deg);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:14px;font-family:"Manrope";font-weight:600;font-size:.74rem;
+  letter-spacing:.26em;color:#9db4ff;text-transform:uppercase;margin-bottom:22px}
+.eyebrow::before{content:"";width:34px;height:1px;background:#9db4ff}
+.hero h1{font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.3;margin-bottom:18px}
+.hero p{max-width:56ch;color:#dbe5fb;font-size:1.02rem}
+.demo-badge{display:inline-block;margin-top:22px;font-family:"Manrope";font-size:.72rem;letter-spacing:.14em;
+  color:#ffd88a;border:1px solid rgba(255,216,138,.5);border-radius:999px;padding:7px 16px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-soft);
+  border:1px solid var(--line-soft);margin-top:-34px;position:relative;z-index:2;
+  box-shadow:0 30px 70px rgba(10,28,63,.1)}
+.stat{background:var(--panel);padding:26px 28px}
+.stat .num{font-family:"Manrope";font-weight:800;font-size:1.9rem;color:var(--navy);line-height:1.2}
+.stat .lbl{font-size:.78rem;letter-spacing:.12em;color:var(--muted-2);margin-top:4px}
+
+/* FILTERS */
+.filters{margin:56px 0 8px;display:grid;gap:14px;
+  grid-template-columns:minmax(220px,1.6fr) repeat(3,minmax(140px,1fr)) minmax(150px,1fr)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-family:"Manrope";font-size:.68rem;font-weight:700;letter-spacing:.18em;color:var(--muted-2);text-transform:uppercase}
+.field input,.field select{appearance:none;background:#fff;border:1px solid var(--line);border-radius:2px;
+  padding:12px 14px;font-family:inherit;font-size:.95rem;color:var(--text);transition:.25s;width:100%}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2346557c' fill='none' stroke-width='1.4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;cursor:pointer}
+.field input:focus,.field select:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:var(--blue)}
+.result-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:22px 0 20px;flex-wrap:wrap}
+.result-count{font-size:.92rem;color:var(--muted)}
+.result-count b{font-family:"Manrope";font-weight:800;color:var(--navy);font-size:1.15rem}
+.reset-btn{background:transparent;border:1px solid var(--line);border-radius:2px;padding:9px 18px;
+  font-size:.78rem;letter-spacing:.12em;color:var(--muted);cursor:pointer;transition:.25s;text-transform:uppercase;font-family:"Manrope";font-weight:600}
+.reset-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px;padding-bottom:100px}
+.card{background:var(--panel);border:1px solid var(--line-soft);cursor:pointer;transition:.35s var(--ease);
+  display:flex;flex-direction:column;overflow:hidden}
+.card:hover{transform:translateY(-5px);box-shadow:0 24px 60px rgba(10,28,63,.13);border-color:var(--line)}
+.thumb{height:170px;position:relative;display:flex;align-items:flex-end;padding:14px 16px;color:#fff;overflow:hidden}
+.thumb .tag{position:relative;z-index:2;font-family:"Manrope";font-size:.66rem;font-weight:700;letter-spacing:.16em;
+  background:rgba(11,22,80,.75);backdrop-filter:blur(4px);padding:5px 12px;border-radius:2px;text-transform:uppercase}
+.thumb svg{position:absolute;inset:0;width:100%;height:100%}
+.card-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card h2{font-size:1.06rem;line-height:1.5}
+.loc{font-size:.82rem;color:var(--muted-2);display:flex;align-items:center;gap:6px}
+.loc::before{content:"";width:7px;height:7px;border:1px solid var(--blue);transform:rotate(45deg);flex:0 0 7px}
+.price{font-family:"Manrope";font-weight:800;font-size:1.45rem;color:var(--blue-bright);margin-top:auto}
+.price .unit{font-size:.8rem;font-weight:600;color:var(--muted);margin-left:4px;font-family:"Zen Kaku Gothic New",sans-serif}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.meta span{font-size:.72rem;color:var(--muted);background:var(--bg2);padding:3px 10px;border-radius:2px}
+.empty{grid-column:1/-1;text-align:center;padding:90px 20px;color:var(--muted-2)}
+.empty .serif{font-size:1.3rem;color:var(--muted);margin-bottom:10px}
+
+/* DETAIL DIALOG */
+dialog{border:0;padding:0;max-width:640px;width:calc(100vw - 40px);margin:auto;
+  box-shadow:0 40px 120px rgba(10,28,63,.35)}
+dialog::backdrop{background:rgba(10,20,60,.55);backdrop-filter:blur(3px)}
+.dlg-head{background:linear-gradient(135deg,#0b1650,#1b3ec6);color:#fff;padding:30px 34px 26px;position:relative}
+.dlg-head .tag{font-family:"Manrope";font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:#9db4ff;margin-bottom:8px;display:block}
+.dlg-head h2{font-size:1.35rem;line-height:1.5;padding-right:40px}
+.dlg-close{position:absolute;top:18px;right:18px;background:transparent;border:1px solid rgba(255,255,255,.4);
+  color:#fff;width:34px;height:34px;border-radius:999px;cursor:pointer;font-size:1rem;line-height:1;transition:.25s}
+.dlg-close:hover{border-color:#fff;background:rgba(255,255,255,.12)}
+.dlg-body{padding:28px 34px 34px;background:#fff}
+.dlg-price{font-family:"Manrope";font-weight:800;font-size:2rem;color:var(--blue-bright);margin-bottom:18px}
+.dlg-price .unit{font-size:.9rem;font-weight:600;color:var(--muted);font-family:"Zen Kaku Gothic New",sans-serif;margin-left:5px}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin-bottom:20px}
+.spec div{background:#fff;padding:12px 16px}
+.spec .k{font-size:.68rem;letter-spacing:.14em;color:var(--muted-2);font-family:"Manrope";font-weight:700;text-transform:uppercase}
+.spec .v{font-size:.95rem;color:var(--text);font-weight:600}
+.dlg-note{font-size:.9rem;color:var(--muted);line-height:1.9}
+.dlg-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.dlg-tags span{font-size:.74rem;color:var(--blue-bright);border:1px solid rgba(42,83,230,.35);padding:4px 12px;border-radius:999px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--line-soft);padding:34px 0;background:var(--bg2)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.8rem;color:var(--muted-2)}
+
+@media(max-width:900px){
+  .filters{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .wrap{padding:0 20px}
+  .filters{grid-template-columns:1fr}
+  .spec{grid-template-columns:1fr}
+  .nav-note{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="BOARDWALK CAPITAL トップへ">
+      <span class="bm" aria-hidden="true"></span>
+      <span class="wordmark" translate="no">BOARDWALK</span>
+    </a>
+    <span class="nav-note">Akiya Database — Demo</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Vacant House Database</span>
+    <h1>空き家データベース</h1>
+    <p>全国の空き家情報を検索・比較できるデータベースのデモです。地域・種別・価格帯から絞り込み、再生価値のある物件を発見します。</p>
+    <span class="demo-badge">⚠ デモ版 — 掲載物件はすべて架空のサンプルデータです</span>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="stats" id="stats" aria-live="polite"></div>
+
+  <form class="filters" id="filters" onsubmit="return false">
+    <div class="field">
+      <label for="q">キーワード</label>
+      <input type="search" id="q" placeholder="例: 古民家 / 海 / 温泉" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label for="pref">都道府県</label>
+      <select id="pref"><option value="">すべて</option></select>
+    </div>
+    <div class="field">
+      <label for="type">種別</label>
+      <select id="type"><option value="">すべて</option></select>
+    </div>
+    <div class="field">
+      <label for="price">価格帯</label>
+      <select id="price">
+        <option value="">すべて</option>
+        <option value="0-100">〜100万円</option>
+        <option value="100-300">100〜300万円</option>
+        <option value="300-800">300〜800万円</option>
+        <option value="800-99999">800万円〜</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="sort">並び替え</label>
+      <select id="sort">
+        <option value="new">新着順</option>
+        <option value="price-asc">価格が安い順</option>
+        <option value="price-desc">価格が高い順</option>
+        <option value="land-desc">土地が広い順</option>
+        <option value="year-desc">築年が新しい順</option>
+      </select>
+    </div>
+  </form>
+
+  <div class="result-bar">
+    <p class="result-count" aria-live="polite"><b id="count">0</b> 件の物件が見つかりました</p>
+    <button class="reset-btn" id="reset" type="button">条件をリセット</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <div class="dlg-head">
+    <span class="tag" id="dlg-tag"></span>
+    <h2 id="dlg-title"></h2>
+    <button class="dlg-close" id="dlg-close" aria-label="閉じる">✕</button>
+  </div>
+  <div class="dlg-body">
+    <p class="dlg-price" id="dlg-price"></p>
+    <div class="spec" id="dlg-spec"></div>
+    <p class="dlg-note" id="dlg-note"></p>
+    <div class="dlg-tags" id="dlg-tags"></div>
+  </div>
+</dialog>
+
+<footer>
+  <div class="wrap">
+    <span>© BOARDWALK CAPITAL — 空き家データベース（デモ）</span>
+    <span>掲載物件はすべて架空のサンプルデータであり、実在の物件・所在地とは関係ありません。</span>
+  </div>
+</footer>
+
+<script>
+// ===== サンプルデータ（すべて架空） =====
+const DB=[
+ {id:1,title:"里山を望む茅葺き屋根の古民家",pref:"長野県",city:"伊那市",type:"古民家",price:280,land:660,bldg:145,year:1948,cond:"要修繕",note:"築70年超の茅葺き古民家。梁・柱の状態は良好で、ゲストハウスや工房への再生に向く。母屋のほか土蔵と納屋付き。",tags:["土蔵付き","駐車3台","田畑あり","移住支援対象"]},
+ {id:2,title:"海が見える高台の平屋",pref:"静岡県",city:"下田市",city2:"",type:"戸建て",price:480,land:230,bldg:82,year:1979,cond:"即入居可",note:"相模灘を一望する高台の平屋。屋根・外壁は5年前に改修済みで、水回りの更新のみで居住可能。",tags:["オーシャンビュー","駐車2台","都市ガス"]},
+ {id:3,title:"商店街の角地・元米穀店の店舗兼住宅",pref:"広島県",city:"尾道市",type:"店舗付き住宅",price:150,land:95,bldg:120,year:1965,cond:"要修繕",note:"アーケード商店街の角地。1階店舗+2階住居。カフェ・物販の開業事例が近隣に多数。",tags:["商店街","角地","事業向き"]},
+ {id:4,title:"温泉権付き・渓流沿いの離れ付き邸宅",pref:"大分県",city:"由布市",type:"戸建て",price:980,land:820,bldg:190,year:1992,cond:"即入居可",note:"温泉引込権付き。母屋+離れ2棟で、貸切宿への転用実績が周辺で豊富。渓流に面した露天風呂スペースあり。",tags:["温泉権","離れ2棟","旅館業可"]},
+ {id:5,title:"雪深い集落の曲がり家",pref:"岩手県",city:"遠野市",type:"古民家",price:80,land:990,bldg:210,year:1935,cond:"要大規模修繕",note:"南部曲がり家形式の大型古民家。屋根の葺き替えが必要だが、構造材は健全。文化的価値が高い。",tags:["曲がり家","農地付き","補助金対象"]},
+ {id:6,title:"城下町の町家・格子戸のある二階建て",pref:"石川県",city:"金沢市",type:"町家",price:750,land:110,bldg:130,year:1955,cond:"要修繕",note:"茶屋街まで徒歩8分の伝統的町家。格子戸・坪庭・吹き抜けが残る。宿泊施設転用の許可実績エリア。",tags:["伝統建築","観光地","民泊可"]},
+ {id:7,title:"みかん畑に囲まれた瀬戸内の家",pref:"愛媛県",city:"八幡浜市",type:"戸建て",price:120,land:400,bldg:95,year:1972,cond:"要修繕",note:"瀬戸内海を見下ろす斜面地。みかん畑300坪付きで、就農希望者向けの支援制度対象。",tags:["果樹園付き","海が見える","就農支援"]},
+ {id:8,title:"駅徒歩5分・昭和レトロな文化住宅",pref:"大阪府",city:"河内長野市",type:"戸建て",price:390,land:85,bldg:78,year:1968,cond:"即入居可",note:"私鉄駅徒歩5分。内装は昭和の趣を残しつつ水回りは更新済み。賃貸運用利回りの試算資料あり。",tags:["駅近","投資向き","更新済み"]},
+ {id:9,title:"白樺林の中の山小屋風ロッジ",pref:"北海道",city:"ニセコ町",type:"別荘",price:850,land:1200,bldg:105,year:1988,cond:"即入居可",note:"スキーリゾートまで車10分。薪ストーブ・吹き抜けリビング。通年貸別荘としての運用実績あり。",tags:["リゾート","薪ストーブ","貸別荘実績"]},
+ {id:10,title:"石垣と赤瓦の島の家",pref:"沖縄県",city:"石垣市",type:"古民家",price:560,land:310,bldg:88,year:1961,cond:"要修繕",note:"琉球石灰岩の石垣に囲まれた赤瓦の伝統家屋。フクギ並木の集落内。ゲストハウス需要が高いエリア。",tags:["赤瓦","離島","観光地"]},
+ {id:11,title:"造り酒屋の蔵付き母屋",pref:"新潟県",city:"長岡市",type:"店舗付き住宅",price:680,land:750,bldg:340,year:1930,cond:"要大規模修繕",note:"元造り酒屋。酒蔵2棟+母屋。蔵はイベントスペース・醸造所への転用相談可。井戸水は現役。",tags:["酒蔵2棟","井戸","イベント向き"]},
+ {id:12,title:"棚田を見下ろす茶畑の家",pref:"静岡県",city:"川根本町",type:"戸建て",price:60,land:520,bldg:110,year:1958,cond:"要大規模修繕",note:"棚田と茶畑に囲まれた集落の空き家。町の空き家バンク連携物件を想定したサンプル。改修補助最大200万円の想定。",tags:["茶畑付き","補助金対象","眺望良好"]},
+ {id:13,title:"港町の元網元の家",pref:"富山県",city:"氷見市",type:"古民家",price:340,land:280,bldg:165,year:1952,cond:"要修繕",note:"漁港徒歩3分。太い梁の広間と囲炉裏が残る元網元宅。食を軸にした宿への再生プランが描きやすい。",tags:["漁港近く","囲炉裏","宿向き"]},
+ {id:14,title:"武家屋敷通りの平屋",pref:"秋田県",city:"仙北市",type:"古民家",price:450,land:495,bldg:140,year:1940,cond:"要修繕",note:"角館の武家屋敷通りに近い平屋。枝垂れ桜の古木あり。観光シーズンの人通りが多い立地。",tags:["観光地","庭園","桜"]},
+ {id:15,title:"多摩の丘の上のアトリエ付き住宅",pref:"東京都",city:"青梅市",type:"戸建て",price:880,land:190,bldg:125,year:1996,cond:"即入居可",note:"都心まで電車70分。天井高4mのアトリエ棟付き。クリエイターの移住需要が高いエリア。",tags:["アトリエ","都心通勤圏","駐車2台"]},
+ {id:16,title:"炭鉱町の元映画館",pref:"福岡県",city:"田川市",type:"店舗付き住宅",price:200,land:400,bldg:480,year:1957,cond:"要大規模修繕",note:"昭和30年代の元映画館。スクリーンと桟敷席が現存。文化施設・スタジオへの転用プロジェクト向き。",tags:["大空間","文化財級","事業向き"]},
+ {id:17,title:"湖畔のボートハウス付きコテージ",pref:"山梨県",city:"富士河口湖町",type:"別荘",price:1200,land:660,bldg:98,year:2001,cond:"即入居可",note:"湖まで徒歩1分、ボートハウス・桟橋利用権付き。富士山ビュー。貸別荘の稼働率データ提供可。",tags:["湖畔","富士山ビュー","桟橋権"]},
+ {id:18,title:"石畳の宿場町・元旅籠",pref:"長野県",city:"塩尻市",type:"町家",price:520,land:170,bldg:220,year:1925,cond:"要修繕",note:"旧中山道の宿場町に残る元旅籠。間口は狭く奥行きが深い伝統的な構え。ゲストハウス営業の前例あり。",tags:["宿場町","旅籠","ゲストハウス向き"]},
+ {id:19,title:"みなとの見える洋館付き住宅",pref:"兵庫県",city:"神戸市",type:"戸建て",price:1500,land:210,bldg:170,year:1938,cond:"要修繕",note:"昭和初期の洋館部分が残る和洋折衷住宅。ステンドグラスとマントルピースが現存。眺望は港と市街。",tags:["洋館","歴史的建物","眺望良好"]},
+ {id:20,title:"りんご園の中の農家住宅",pref:"青森県",city:"弘前市",type:"戸建て",price:95,land:1500,bldg:130,year:1966,cond:"要修繕",note:"りんご園450坪付き。農機具庫・作業場完備。就農パッケージでの取得を想定したサンプル物件。",tags:["りんご園","就農支援","作業場付き"]},
+ {id:21,title:"路面電車の走る町の長屋",pref:"熊本県",city:"熊本市",type:"町家",price:230,land:60,bldg:72,year:1963,cond:"要修繕",note:"路面電車の電停徒歩2分の連棟長屋の一戸。若手店主の出店が続くエリアで、住居兼小商いに向く。",tags:["電停近く","小商い向き","コンパクト"]},
+ {id:22,title:"高原の元分校",pref:"岡山県",city:"真庭市",type:"その他",price:380,land:2400,bldg:520,year:1954,cond:"要大規模修繕",note:"木造平屋の元分校。教室4室と講堂、グラウンド付き。合宿所・サテライトオフィスへの転用相談可。",tags:["元学校","グラウンド","大規模"]},
+ {id:23,title:"世界遺産の麓・養蚕農家の家",pref:"群馬県",city:"富岡市",type:"古民家",price:170,land:580,bldg:185,year:1918,cond:"要大規模修繕",note:"総二階の養蚕農家建築。2階の蚕室は開放的な大空間で、ギャラリー・工房向き。",tags:["養蚕建築","大空間","工房向き"]},
+ {id:24,title:"半島の突端・灯台の見える家",pref:"和歌山県",city:"串本町",type:"戸建て",price:140,land:260,bldg:90,year:1975,cond:"要修繕",note:"本州最南端エリア。灯台と太平洋を望む高台。釣り・ダイビング拠点としての需要が見込める。",tags:["海が見える","釣り拠点","高台"]}
+];
+
+const yen=n=>n>=10000?`${(n/10000).toLocaleString()}億`:n.toLocaleString();
+const $=id=>document.getElementById(id);
+const grid=$("grid"),dlg=$("dlg");
+
+// 絞り込みプルダウンをデータから生成
+const prefs=[...new Set(DB.map(p=>p.pref))].sort((a,b)=>a.localeCompare(b,"ja"));
+const types=[...new Set(DB.map(p=>p.type))];
+prefs.forEach(p=>$("pref").append(new Option(p,p)));
+types.forEach(t=>$("type").append(new Option(t,t)));
+
+function filtered(){
+  const q=$("q").value.trim().toLowerCase(),pref=$("pref").value,type=$("type").value,price=$("price").value;
+  let list=DB.filter(p=>{
+    if(pref&&p.pref!==pref)return false;
+    if(type&&p.type!==type)return false;
+    if(price){const[lo,hi]=price.split("-").map(Number);if(p.price<lo||p.price>hi)return false}
+    if(q){const hay=`${p.title} ${p.pref} ${p.city} ${p.type} ${p.note} ${p.tags.join(" ")}`.toLowerCase();
+      if(!q.split(/\s+/).every(w=>hay.includes(w)))return false}
+    return true;
+  });
+  const s=$("sort").value;
+  if(s==="price-asc")list.sort((a,b)=>a.price-b.price);
+  else if(s==="price-desc")list.sort((a,b)=>b.price-a.price);
+  else if(s==="land-desc")list.sort((a,b)=>b.land-a.land);
+  else if(s==="year-desc")list.sort((a,b)=>b.year-a.year);
+  else list.sort((a,b)=>b.id-a.id);
+  return list;
+}
+
+// サムネイル: 物件ごとに決まる色相の抽象ジェネラティブSVG(写真の代わり)
+function thumbSVG(p){
+  const hue=(p.id*47)%360;
+  return `<svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><linearGradient id="g${p.id}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(${hue},45%,30%)"/><stop offset="1" stop-color="hsl(${(hue+40)%360},50%,18%)"/>
+    </linearGradient></defs>
+    <rect width="400" height="170" fill="url(#g${p.id})"/>
+    <path d="M0 ${120+(p.id%4)*8} Q100 ${90+(p.id%5)*6} 200 ${115+(p.id%3)*7} T400 ${105+(p.id%6)*5} V170 H0 Z" fill="hsla(${hue},40%,12%,.55)"/>
+    <g transform="translate(${150+(p.id%5)*14},${58+(p.id%3)*6})" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="2.5">
+      <path d="M0 26 L34 0 L68 26" /><path d="M8 24 V58 H60 V24" /><rect x="27" y="38" width="14" height="20" fill="rgba(255,255,255,.35)" stroke="none"/>
+    </g></svg>`;
+}
+
+function render(){
+  const list=filtered();
+  $("count").textContent=list.length;
+  grid.innerHTML=list.length?list.map(p=>`
+    <article class="card" data-id="${p.id}" tabindex="0" role="button" aria-label="${p.title}の詳細を見る">
+      <div class="thumb">${thumbSVG(p)}<span class="tag">${p.type}</span></div>
+      <div class="card-body">
+        <p class="loc">${p.pref} ${p.city}</p>
+        <h2>${p.title}</h2>
+        <div class="meta"><span>土地 ${p.land}㎡</span><span>建物 ${p.bldg}㎡</span><span>${p.year}年築</span><span>${p.cond}</span></div>
+        <p class="price">${yen(p.price)}<span class="unit">万円</span></p>
+      </div>
+    </article>`).join("")
+   :`<div class="empty"><p class="serif">条件に合う物件が見つかりませんでした</p><p>キーワードや絞り込み条件を変えてお試しください。</p></div>`;
+  renderStats(list);
+}
+
+function renderStats(list){
+  const avg=list.length?Math.round(list.reduce((s,p)=>s+p.price,0)/list.length):0;
+  const minP=list.length?Math.min(...list.map(p=>p.price)):0;
+  $("stats").innerHTML=`
+    <div class="stat"><p class="num">${list.length}<span style="font-size:.9rem"> 件</span></p><p class="lbl">掲載物件</p></div>
+    <div class="stat"><p class="num">${new Set(list.map(p=>p.pref)).size}<span style="font-size:.9rem"> 都道府県</span></p><p class="lbl">対象エリア</p></div>
+    <div class="stat"><p class="num">${avg.toLocaleString()}<span style="font-size:.9rem"> 万円</span></p><p class="lbl">平均価格</p></div>
+    <div class="stat"><p class="num">${minP.toLocaleString()}<span style="font-size:.9rem"> 万円</span></p><p class="lbl">最低価格</p></div>`;
+}
+
+function openDetail(id){
+  const p=DB.find(x=>x.id===id);if(!p)return;
+  $("dlg-tag").textContent=`${p.type} — ${p.pref} ${p.city}`;
+  $("dlg-title").textContent=p.title;
+  $("dlg-price").innerHTML=`${yen(p.price)}<span class="unit">万円</span>`;
+  $("dlg-spec").innerHTML=[
+    ["所在地",`${p.pref}${p.city}`],["種別",p.type],
+    ["土地面積",`${p.land}㎡（約${Math.round(p.land*0.3025)}坪）`],
+    ["建物面積",`${p.bldg}㎡（約${Math.round(p.bldg*0.3025)}坪）`],
+    ["築年",`${p.year}年（築${new Date().getFullYear()-p.year}年）`],["状態",p.cond]
+  ].map(([k,v])=>`<div><p class="k">${k}</p><p class="v">${v}</p></div>`).join("");
+  $("dlg-note").textContent=p.note;
+  $("dlg-tags").innerHTML=p.tags.map(t=>`<span>${t}</span>`).join("");
+  dlg.showModal();
+}
+
+grid.addEventListener("click",e=>{const c=e.target.closest(".card");if(c)openDetail(+c.dataset.id)});
+grid.addEventListener("keydown",e=>{
+  if(e.key==="Enter"||e.key===" "){const c=e.target.closest(".card");if(c){e.preventDefault();openDetail(+c.dataset.id)}}});
+$("dlg-close").addEventListener("click",()=>dlg.close());
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+
+["q","pref","type","price","sort"].forEach(id=>$(id).addEventListener("input",render));
+$("reset").addEventListener("click",()=>{["q","pref","type","price"].forEach(id=>$(id).value="");$("sort").value="new";render()});
+
+render();
+</script>
+</body>
+</html>
