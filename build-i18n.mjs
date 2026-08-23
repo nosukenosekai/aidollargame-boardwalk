@@ -17,6 +17,7 @@ src = src.replace(/<link rel="alternate" hreflang="[^"]*"[^>]*>\s*/g, '');
 const m = src.match(/const I18N=[\s\S]*?const SUPPORTED=Object\.keys\(I18N\);/)[0];
 const I18N = new Function(m + ';return I18N;')();
 const NEWS = new Function(src.match(/const NEWS=\[[\s\S]*?\];/)[0] + ';return NEWS;')();
+const EVENTS = new Function(src.match(/const EVENTS=\[[\s\S]*?\n\];/)[0] + ';return EVENTS;')();
 const en = I18N.en;
 const T = (lc, k) => (I18N[lc] && I18N[lc][k] != null) ? I18N[lc][k] : en[k];
 const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -33,6 +34,18 @@ function renderNews(lc) {
     const thumb = n.logo ? `<div class="thumb logo"><img src="/${n.logo}" alt="" loading="lazy" decoding="async"></div>` : n.img ? `<div class="thumb"><img src="/${n.img}" alt="" loading="lazy" decoding="async"></div>` : '';
     const hasImg = n.logo || n.img;
     return `<div class="news-card${hasImg ? '' : ' no-img'}">${thumb}<div class="body"><div class="meta"><span class="date">${n.date}</span><span class="cat">${cat}</span></div><div class="ttl">${ttl}</div></div></div>`;
+  }).join('');
+}
+
+function renderEvents(lc) {
+  return EVENTS.map(n => {
+    const ttl = (n.title[lc] || n.title.en);
+    const a = ttl.replace(/"/g, '&quot;');
+    const thumb = n.img ? `<div class="thumb"><img src="/${n.img}" alt="${a}" loading="lazy" decoding="async"></div>` : '';
+    const body = `<div class="body"><div class="meta"><span class="date">${n.date}</span></div><div class="ttl">${ttl}</div>${n.url ? '<span class="ext">Detail →</span>' : ''}</div>`;
+    return n.url
+      ? `<a class="news-card ev-card" href="${n.url}" target="_blank" rel="noopener">${thumb}${body}</a>`
+      : `<div class="news-card ev-card">${thumb}${body}</div>`;
   }).join('');
 }
 
@@ -60,6 +73,8 @@ function build(lc, isRoot) {
     }
     // News事前描画
     html = html.replace(/(<div class="news-list" id="newsList"[^>]*>)(\s*)(<\/div>)/, (mm, a, s, c) => a + renderNews(lc) + c);
+    // Event事前描画
+    html = html.replace(/(<div class="news-list ev-list" id="eventList"[^>]*>)(\s*)(<\/div>)/, (mm, a, s, c) => a + renderEvents(lc) + c);
     // <html lang> と data-lang(アラビア語はRTL)
     html = html.replace(/<html lang="ja">/, `<html lang="${lc}" data-lang="${lc}"${lc === 'ar' ? ' dir="rtl"' : ''}>`);
     // og:locale を言語に合わせる
