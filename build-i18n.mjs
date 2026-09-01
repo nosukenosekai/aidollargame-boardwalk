@@ -42,10 +42,12 @@ function renderEvents(lc) {
     const ttl = (n.title[lc] || n.title.en);
     const a = ttl.replace(/"/g, '&quot;');
     const thumb = n.img ? `<div class="thumb"><img src="/${n.img}" alt="${a}" loading="lazy" decoding="async"></div>` : '';
-    const body = `<div class="body"><div class="meta"><span class="date">${n.date}</span></div><div class="ttl">${ttl}</div>${n.url ? '<span class="ext">Detail →</span>' : ''}</div>`;
+    const cat = (n.cat && (n.cat[lc] || n.cat.en)) || '';
+    const cls = 'news-card ev-card' + (n.img ? '' : ' no-img');
+    const body = `<div class="body"><div class="meta"><span class="date">${n.date}</span>${cat ? `<span class="cat">${cat}</span>` : ''}</div><div class="ttl">${ttl}</div>${n.url ? '<span class="ext">Detail →</span>' : ''}</div>`;
     return n.url
-      ? `<a class="news-card ev-card" href="${n.url}" target="_blank" rel="noopener">${thumb}${body}</a>`
-      : `<div class="news-card ev-card">${thumb}${body}</div>`;
+      ? `<a class="${cls}" href="${n.url}" target="_blank" rel="noopener">${thumb}${body}</a>`
+      : `<div class="${cls}">${thumb}${body}</div>`;
   }).join('');
 }
 
