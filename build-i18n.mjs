@@ -33,7 +33,7 @@ function renderNews(lc) {
     const ttl = (n.title[lc] || n.title.en);
     const thumb = n.logo ? `<div class="thumb logo"><img src="/${n.logo}" alt="" loading="lazy" decoding="async"></div>` : n.img ? `<div class="thumb"><img src="/${n.img}" alt="" loading="lazy" decoding="async"></div>` : '';
     const hasImg = n.logo || n.img;
-    return `<div class="news-card${hasImg ? '' : ' no-img'}">${thumb}<div class="body"><div class="meta"><span class="date">${n.date}</span><span class="cat">${cat}</span></div><div class="ttl">${ttl}</div></div></div>`;
+    return `<div class="news-card${hasImg ? '' : ' no-img'}"><div class="body"><div class="meta"><span class="date">${n.date}</span><span class="cat">${cat}</span></div><div class="ttl">${ttl}</div></div>${thumb}</div>`;
   }).join('');
 }
 
@@ -46,8 +46,8 @@ function renderEvents(lc) {
     const cls = 'news-card ev-card' + (n.img ? '' : ' no-img');
     const body = `<div class="body"><div class="meta"><span class="date">${n.date}</span>${cat ? `<span class="cat">${cat}</span>` : ''}</div><div class="ttl">${ttl}</div>${n.url ? '<span class="ext">Detail →</span>' : ''}</div>`;
     return n.url
-      ? `<a class="${cls}" href="${n.url}" target="_blank" rel="noopener">${thumb}${body}</a>`
-      : `<div class="${cls}">${thumb}${body}</div>`;
+      ? `<a class="${cls}" href="${n.url}" target="_blank" rel="noopener">${body}${thumb}</a>`
+      : `<div class="${cls}">${body}${thumb}</div>`;
   }).join('');
 }
 

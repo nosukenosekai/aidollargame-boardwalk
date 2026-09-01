@@ -329,23 +329,21 @@ section{position:relative}
 .news-card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;
   display:flex;flex-direction:column;transition:.45s var(--ease)}
 .news-card:hover{transform:translateY(-6px);box-shadow:0 26px 54px rgba(10,28,63,.13);border-color:rgba(42,83,230,.35)}
-.news-card .thumb{aspect-ratio:16/10;overflow:hidden;background:var(--bg2)}
-.news-card .thumb img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
-.news-card:hover .thumb img{transform:scale(1.06)}
-.news-card .body{padding:22px 22px 26px;display:flex;flex-direction:column;gap:12px}
-.news-card .meta{display:flex;align-items:center;gap:12px}
-.news-card .date{font-family:"Manrope";font-weight:500;color:var(--muted);font-size:.86rem;letter-spacing:.05em}
+.news-card{display:flex;flex-direction:column;border-left:3px solid var(--blue)}
+.news-card .body{flex:1 1 auto;padding:26px 24px;display:flex;flex-direction:column;gap:12px}
+.news-card .meta{display:flex;align-items:center;gap:12px;min-height:30px}
+.news-card .date{font-family:"Manrope";font-weight:600;color:var(--navy);font-size:1rem;letter-spacing:.05em}
 .news-card .cat{font-family:"Manrope";font-weight:600;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--blue);border:1px solid var(--line);border-radius:999px;padding:4px 12px;white-space:nowrap}
 .news-card .ttl{font-size:1.06rem;font-weight:500;line-height:1.65;color:var(--text);transition:.3s}
 .news-card:hover .ttl{color:var(--blue)}
-.news-card{display:flex;flex-direction:column}
-.news-card .thumb.logo{display:flex;align-items:center;justify-content:center;background:#fff;border-bottom:1px solid var(--line-soft);padding:20px}
-.news-card .thumb.logo img{width:auto;height:auto;max-width:64%;max-height:54px;object-fit:contain;transition:transform .5s var(--ease)}
+/* 画像はカード下端に固定高で。上に来ないので日付の位置が全カードで揃う */
+.news-card .thumb{margin-top:auto;height:132px;overflow:hidden;background:var(--bg2);border-top:1px solid var(--line-soft)}
+.news-card .thumb img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;transition:transform 1s var(--ease)}
+.news-card:hover .thumb img{transform:scale(1.06)}
+.news-card .thumb.logo{height:104px;display:flex;align-items:center;justify-content:center;background:#fff;padding:16px 20px}
+.news-card .thumb.logo img{width:auto;height:auto;max-width:62%;max-height:48px;object-fit:contain;transition:transform .5s var(--ease)}
 .news-card:hover .thumb.logo img{transform:scale(1.05)}
-.news-card.no-img{border-left:3px solid var(--blue)}
-.news-card.no-img .body{padding:26px 24px}
-.news-card.no-img .date{font-size:1rem;color:var(--navy);font-weight:600}
 .news-list:not(.show-all) .news-card:nth-child(n+10){display:none}
 .news-list.show-all>.news-card{opacity:1;transform:none;transition-delay:0s}
 .news-more{display:block;margin:40px auto 0;padding:14px 36px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--navy);font-family:"Manrope";font-weight:600;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:border-color .25s var(--ease),color .25s var(--ease),box-shadow .25s var(--ease)}
@@ -357,7 +355,8 @@ section{position:relative}
 a.news-card{text-decoration:none;color:inherit}
 .ev-card .thumb{background:#0a1640}
 .ev-card .ttl{font-size:.98rem;line-height:1.6}
-.ev-card .ext{display:inline-flex;align-items:center;gap:6px;font-family:"Manrope";font-size:.64rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-top:2px}
+/* 「DETAIL →」はカード下端に揃える(見出しの行数でバラつかないように) */
+.ev-card .ext{display:inline-flex;align-items:center;gap:6px;font-family:"Manrope";font-size:.64rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-top:auto;padding-top:10px}
 .ev-list:not(.show-all) .ev-card:nth-child(n+9){display:none}
 /* Client Movie */
 .clientmovie .movie-grid{margin-top:54px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:26px}
@@ -1305,7 +1304,7 @@ const NEWS=[
  {date:"2020.06",img:"",logo:"",cat:{ja:"活動",en:"Activity"},title:{ja:"創業者・那珂通雅が一般社団法人東京ニュービジネス協議会（東京NBC）の副会長に就任しました。",en:"Founder Michimasa Naka was appointed Vice Chairman of the Tokyo New Business Council (Tokyo NBC)."}},
  {date:"2020.05",img:"",logo:"img/partner/vectorinc.png",cat:{ja:"社外取締役",en:"Board"},title:{ja:"創業者・那珂通雅が株式会社ベクトルの社外取締役に就任しました。",en:"Founder Michimasa Naka was appointed Outside Director of Vector Inc."}},
  {date:"2019.03",img:"",logo:"img/partner/vision.png",cat:{ja:"社外取締役",en:"Board"},title:{ja:"創業者・那珂通雅が株式会社ビジョンの社外取締役に就任しました。",en:"Founder Michimasa Naka was appointed Outside Director of Vision Inc."}},
- {date:"2019.03",img:"img/news/keio-sdm.webp",logo:"",cat:{ja:"キャリア",en:"Career"},title:{ja:"創業者・那珂通雅が慶應義塾大学大学院システムデザイン・マネジメント研究科（SDM）の非常勤講師に就任しました。",en:"Founder Michimasa Naka was appointed Adjunct Lecturer at the Keio University Graduate School of System Design and Management (SDM)."}},
+ {date:"2019.03",img:"",logo:"img/news/keio-sdm.webp",cat:{ja:"キャリア",en:"Career"},title:{ja:"創業者・那珂通雅が慶應義塾大学大学院システムデザイン・マネジメント研究科（SDM）の非常勤講師に就任しました。",en:"Founder Michimasa Naka was appointed Adjunct Lecturer at the Keio University Graduate School of System Design and Management (SDM)."}},
  {date:"2018.12",img:"",logo:"",cat:{ja:"役員",en:"Board"},title:{ja:"創業者・那珂通雅がボードウォーク・トレーディング株式会社（旧EARCH-YOU）の取締役に就任しました。",en:"Founder Michimasa Naka was appointed Director of Boardwalk Trading Inc. (formerly EARCH-YOU)."}},
  {date:"2017.06",img:"",logo:"",cat:{ja:"会社情報",en:"Company"},title:{ja:"創業者・那珂通雅が株式会社アクセルレーターを設立し、代表取締役社長に就任しました。",en:"Founder Michimasa Naka founded Accelerator Inc. and became President & CEO."}},
  {date:"2016.10",img:"",logo:"",cat:{ja:"選出",en:"Recognition"},title:{ja:"創業者・那珂通雅が「金融業界 慶應義塾大学出身の社長・会長10人」に選出されました。",en:"Founder Michimasa Naka was named one of \u201c10 Keio-educated Presidents & Chairmen in Finance.\u201d"}},
@@ -1371,8 +1370,8 @@ function renderEvents(lang){
     const cls="news-card ev-card"+(n.img?"":" no-img");
     const body=`<div class="body"><div class="meta"><span class="date">${n.date}</span>${cat?`<span class="cat">${cat}</span>`:""}</div><div class="ttl">${ttl}</div>${n.url?'<span class="ext">Detail →</span>':""}</div>`;
     return n.url
-      ? `<a class="${cls}" href="${n.url}" target="_blank" rel="noopener">${thumb}${body}</a>`
-      : `<div class="${cls}">${thumb}${body}</div>`;
+      ? `<a class="${cls}" href="${n.url}" target="_blank" rel="noopener">${body}${thumb}</a>`
+      : `<div class="${cls}">${body}${thumb}</div>`;
   }).join("");
   /* 隠れる件数がある時だけ「すべて見る」を出す(CSSは9件目以降を隠す) */
   const more=document.getElementById("evMore");
@@ -1385,7 +1384,7 @@ function renderNews(lang){
     const a=ttl.replace(/"/g,"&quot;");
     const thumb=n.logo?`<div class="thumb logo"><img src="${n.logo}" alt="${a}" loading="lazy" decoding="async"></div>`:n.img?`<div class="thumb"><img src="${n.img}" alt="${a}" loading="lazy" decoding="async"></div>`:"";
     const hasImg=n.logo||n.img;
-    return `<div class="news-card${hasImg?"":" no-img"}">${thumb}<div class="body"><div class="meta"><span class="date">${n.date}</span><span class="cat">${cat}</span></div><div class="ttl">${ttl}</div></div></div>`;
+    return `<div class="news-card${hasImg?"":" no-img"}"><div class="body"><div class="meta"><span class="date">${n.date}</span><span class="cat">${cat}</span></div><div class="ttl">${ttl}</div></div>${thumb}</div>`;
   }).join("");
 }
 
