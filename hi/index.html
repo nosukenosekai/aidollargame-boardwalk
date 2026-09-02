@@ -49,7 +49,8 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "ボードウォーク・キャピタル株式会社",
-  "alternateName": "Boardwalk Capital Inc.",
+  "alternateName": ["Boardwalk Capital Inc.", "ボードウォーク・キャピタル", "BOARDWALK CAPITAL"],
+  "inLanguage": "ja",
   "url": "https://boardwalkcapitalinc.com/",
   "logo": "https://boardwalkcapitalinc.com/img/logo.jpg",
   "image": "https://boardwalkcapitalinc.com/img/hero.webp",
@@ -1402,7 +1403,7 @@ const _forced=document.documentElement.getAttribute("data-lang");
    2026-09-01 実測: 「ボードウォーク・キャピタル」でヒットする当サイトのタイトル・説明文が英語になっていた。
    Googlebotは既定でen-USとして描画するため、navigator.languages 判定がそのまま効いてしまうのが原因。
    人間の閲覧者の自動切替(=本サイトの目玉機能)はこれまで通り。 */
-const IS_CRAWLER=/bot\b|bot\/|crawler|crawling|spider|slurp|googlebot|google-inspectiontool|bingpreview|duckduckbot|baiduspider|yandex|applebot|facebookexternalhit|twitterbot|slackbot|linkedinbot|embedly|pinterest|whatsapp|headlesschrome|lighthouse/i.test(navigator.userAgent||"");
+const IS_CRAWLER=/bot\b|bot\/|crawler|crawling|spider|slurp|googlebot|google-inspectiontool|googleother|google-extended|bingpreview|duckduckbot|baiduspider|yandex|applebot|facebookexternalhit|twitterbot|slackbot|linkedinbot|embedly|pinterest|whatsapp|headlesschrome|lighthouse/i.test(navigator.userAgent||"");
 applyLang(
   (_forced&&SUPPORTED.includes(_forced)) ? _forced
   : (_url&&SUPPORTED.includes(_url)) ? _url

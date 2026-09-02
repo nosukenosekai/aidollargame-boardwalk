@@ -14,6 +14,9 @@ const OG_LOCALE = { en:'en_US', zh:'zh_CN', 'zh-Hant':'zh_TW', ko:'ko_KR', it:'i
 let src = readFileSync(join(HERE, 'index.html'), 'utf8');
 // 冪等化: 既存のhreflang注入を除去(sourceが過去のビルド出力を兼ねても重複しない)。canonicalは残す。
 src = src.replace(/<link rel="alternate" hreflang="[^"]*"[^>]*>\s*/g, '');
+// 冪等化: 前回焼き込んだ沿革/登壇のカードを空に戻す(ルートにも焼くようになったため二重焼きを防ぐ)
+src = src.replace(/(<div class="news-list" id="newsList"[^>]*>)[\s\S]*?(<\/div>\s*<button)/, '$1$2');
+src = src.replace(/(<div class="news-list ev-list" id="eventList"[^>]*>)[\s\S]*?(<\/div>\s*<button)/, '$1$2');
 const m = src.match(/const I18N=[\s\S]*?const SUPPORTED=Object\.keys\(I18N\);/)[0];
 const I18N = new Function(m + ';return I18N;')();
 const NEWS = new Function(src.match(/const NEWS=\[[\s\S]*?\];/)[0] + ';return NEWS;')();
@@ -60,6 +63,12 @@ function hreflang() {
 
 function build(lc, isRoot) {
   let html = src;
+  if (isRoot) {
+    // ルートは日本語。i18nの置換は不要だが、沿革/登壇はJS任せにせず日本語で焼き込む
+    // (英語ページだけ本文が厚い状態だと、日本語クエリでルートが不利になる)
+    html = html.replace(/(<div class="news-list" id="newsList"[^>]*>)(\s*)(<\/div>)/, (mm, a, sp, c) => a + renderNews('ja').replace(/src="\//g, 'src="') + c);
+    html = html.replace(/(<div class="news-list ev-list" id="eventList"[^>]*>)(\s*)(<\/div>)/, (mm, a, sp, c) => a + renderEvents('ja').replace(/src="\//g, 'src="') + c);
+  }
   if (!isRoot) {
     // 各data-i18n要素の内側を当該言語に置換(全出現)
     for (const k of keys) {
