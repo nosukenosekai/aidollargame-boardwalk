@@ -46,7 +46,11 @@ function renderNews(lc) {
 function renderPartners(lc, rootRelative) {
   return PCO.map(c => {
     const biz = c[2] ? (c[2][lc] || c[2].en || '') : '';
-    const inner = `<span class="nm">${c[0]}</span>${c[1] ? `<small>${c[1]}</small>` : ''}${biz ? `<span class="biz">${biz}</span>` : ''}`;
+    const est = c[4] ? c[4].replace(/年/, '/').replace(/月.*$/, '') : '';
+    const meta = lc === 'ja'
+      ? [c[3], c[4] ? '設立 ' + c[4] : ''].filter(Boolean).join('　/　')
+      : (est ? 'Founded ' + est : '');
+    const inner = `<span class="nm">${c[0]}</span>${c[1] ? `<small>${c[1]}</small>` : ''}${biz ? `<span class="biz">${biz}</span>` : ''}${meta ? `<span class="meta2">${meta}</span>` : ''}`;
     const u = CURL[c[0]];
     return u ? `<a class="pc" href="${u}" target="_blank" rel="noopener">${inner}<span class="ext">\u2197</span></a>` : `<div class="pc">${inner}</div>`;
   }).join('');
