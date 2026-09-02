@@ -17,9 +17,12 @@ src = src.replace(/<link rel="alternate" hreflang="[^"]*"[^>]*>\s*/g, '');
 // 冪等化: 前回焼き込んだ沿革/登壇のカードを空に戻す(ルートにも焼くようになったため二重焼きを防ぐ)
 src = src.replace(/(<div class="news-list" id="newsList"[^>]*>)[\s\S]*?(<\/div>\s*<button)/, '$1$2');
 src = src.replace(/(<div class="news-list ev-list" id="eventList"[^>]*>)[\s\S]*?(<\/div>\s*<button)/, '$1$2');
+src = src.replace(/(<div class="pcompanies" id="pcompanies"[^>]*>)[\s\S]*?(<\/div><\/div>\s*<\/section>)/, '$1$2');
 const m = src.match(/const I18N=[\s\S]*?const SUPPORTED=Object\.keys\(I18N\);/)[0];
 const I18N = new Function(m + ';return I18N;')();
 const NEWS = new Function(src.match(/const NEWS=\[[\s\S]*?\];/)[0] + ';return NEWS;')();
+const PCO = new Function(src.match(/const PCO=\[[\s\S]*?\n\];/)[0] + ';return PCO;')();
+const CURL = new Function(src.match(/const CURL=\{[\s\S]*?\};/)[0] + ';return CURL;')();
 const EVENTS = new Function(src.match(/const EVENTS=\[[\s\S]*?\n\];/)[0] + ';return EVENTS;')();
 const en = I18N.en;
 const T = (lc, k) => (I18N[lc] && I18N[lc][k] != null) ? I18N[lc][k] : en[k];
@@ -37,6 +40,15 @@ function renderNews(lc) {
     const thumb = n.logo ? `<div class="thumb logo"><img src="/${n.logo}" alt="" loading="lazy" decoding="async"></div>` : n.img ? `<div class="thumb"><img src="/${n.img}" alt="" loading="lazy" decoding="async"></div>` : '';
     const hasImg = n.logo || n.img;
     return `<div class="news-card${hasImg ? '' : ' no-img'}"><div class="body"><div class="meta"><span class="date">${n.date}</span><span class="cat">${cat}</span></div><div class="ttl">${ttl}</div></div>${thumb}</div>`;
+  }).join('');
+}
+
+function renderPartners(lc, rootRelative) {
+  return PCO.map(c => {
+    const biz = c[2] ? (c[2][lc] || c[2].en || '') : '';
+    const inner = `<span class="nm">${c[0]}</span>${c[1] ? `<small>${c[1]}</small>` : ''}${biz ? `<span class="biz">${biz}</span>` : ''}`;
+    const u = CURL[c[0]];
+    return u ? `<a class="pc" href="${u}" target="_blank" rel="noopener">${inner}<span class="ext">\u2197</span></a>` : `<div class="pc">${inner}</div>`;
   }).join('');
 }
 
@@ -68,6 +80,7 @@ function build(lc, isRoot) {
     // (英語ページだけ本文が厚い状態だと、日本語クエリでルートが不利になる)
     html = html.replace(/(<div class="news-list" id="newsList"[^>]*>)(\s*)(<\/div>)/, (mm, a, sp, c) => a + renderNews('ja').replace(/src="\//g, 'src="') + c);
     html = html.replace(/(<div class="news-list ev-list" id="eventList"[^>]*>)(\s*)(<\/div>)/, (mm, a, sp, c) => a + renderEvents('ja').replace(/src="\//g, 'src="') + c);
+    html = html.replace(/(<div class="pcompanies" id="pcompanies"[^>]*>)(\s*)(<\/div><\/div>\s*<\/section>)/, (mm, a, sp, c) => a + renderPartners('ja') + c);
   }
   if (!isRoot) {
     // 各data-i18n要素の内側を当該言語に置換(全出現)
@@ -86,6 +99,8 @@ function build(lc, isRoot) {
     html = html.replace(/(<div class="news-list" id="newsList"[^>]*>)(\s*)(<\/div>)/, (mm, a, s, c) => a + renderNews(lc) + c);
     // Event事前描画
     html = html.replace(/(<div class="news-list ev-list" id="eventList"[^>]*>)(\s*)(<\/div>)/, (mm, a, s, c) => a + renderEvents(lc) + c);
+    // 投資先グリッド事前描画
+    html = html.replace(/(<div class="pcompanies" id="pcompanies"[^>]*>)(\s*)(<\/div><\/div>\s*<\/section>)/, (mm, a, s, c) => a + renderPartners(lc) + c);
     // <html lang> と data-lang(アラビア語はRTL)
     html = html.replace(/<html lang="ja">/, `<html lang="${lc}" data-lang="${lc}"${lc === 'ar' ? ' dir="rtl"' : ''}>`);
     // og:locale を言語に合わせる
