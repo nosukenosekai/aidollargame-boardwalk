@@ -47,28 +47,62 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "ボードウォーク・キャピタル株式会社",
-  "alternateName": ["Boardwalk Capital Inc.", "ボードウォーク・キャピタル", "BOARDWALK CAPITAL"],
-  "inLanguage": "ja",
-  "url": "https://boardwalkcapitalinc.com/",
-  "logo": "https://boardwalkcapitalinc.com/img/logo.jpg",
-  "image": "https://boardwalkcapitalinc.com/img/hero.webp",
-  "description": "アドバイザリー・インキュベーション・エンジェル投資を通じて、世界に挑む企業と人材を支援する投資会社です。",
-  "foundingDate": "2016-07",
-  "founder": { "@type": "Person", "name": "那珂通雅", "alternateName": "Michimasa Naka",
-    "sameAs": ["https://ja.wikipedia.org/wiki/%E9%82%A3%E7%8F%82%E9%80%9A%E9%9B%85"] },
-  "identifier": { "@type": "PropertyValue", "propertyID": "JCN", "value": "5011001112084" },
-  "address": {
-    "@type": "PostalAddress",
-    "postalCode": "153-0061",
-    "addressCountry": "JP",
-    "addressRegion": "東京都",
-    "addressLocality": "目黒区",
-    "streetAddress": "中目黒3-19-7 パークプレース中目黒"
-  },
-  "sameAs": [
-    "https://www.facebook.com/BoardwalkCapitalInc/"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "ボードウォーク・キャピタル株式会社",
+      "alternateName": [
+        "Boardwalk Capital Inc.",
+        "ボードウォーク・キャピタル",
+        "BOARDWALK CAPITAL"
+      ],
+      "inLanguage": "ja",
+      "url": "https://boardwalkcapitalinc.com/",
+      "logo": "https://boardwalkcapitalinc.com/img/logo.jpg",
+      "image": "https://boardwalkcapitalinc.com/img/hero.webp",
+      "description": "アドバイザリー・インキュベーション・エンジェル投資を通じて、世界に挑む企業と人材を支援する投資会社です。",
+      "foundingDate": "2016-07",
+      "founder": {
+        "@type": "Person",
+        "name": "那珂通雅",
+        "alternateName": "Michimasa Naka",
+        "sameAs": [
+          "https://ja.wikipedia.org/wiki/%E9%82%A3%E7%8F%82%E9%80%9A%E9%9B%85"
+        ]
+      },
+      "identifier": {
+        "@type": "PropertyValue",
+        "propertyID": "JCN",
+        "value": "5011001112084"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "postalCode": "153-0061",
+        "addressCountry": "JP",
+        "addressRegion": "東京都",
+        "addressLocality": "目黒区",
+        "streetAddress": "中目黒3-19-7 パークプレース中目黒"
+      },
+      "sameAs": [
+        "https://www.facebook.com/BoardwalkCapitalInc/",
+        "https://initial.inc/investors/V11961"
+      ],
+      "@id": "https://boardwalkcapitalinc.com/#organization"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://boardwalkcapitalinc.com/#website",
+      "url": "https://boardwalkcapitalinc.com/",
+      "name": "ボードウォーク・キャピタル株式会社",
+      "alternateName": [
+        "BOARDWALK CAPITAL",
+        "Boardwalk Capital Inc."
+      ],
+      "inLanguage": "ja",
+      "publisher": {
+        "@id": "https://boardwalkcapitalinc.com/#organization"
+      }
+    }
   ]
 }
 </script>
