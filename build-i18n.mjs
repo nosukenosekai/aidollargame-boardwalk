@@ -125,9 +125,14 @@ function build(lc, isRoot) {
   }
   // title / description(タイトルも各言語のヒーローコピーで言語化)
   const desc = stripTags(T(lc, 'hero.lead'));
+  // 英語ページは英文の正式社名で始める。旧サイトが "boardwalk capital" の検索で勝っている理由が
+  // h1="Boardwalk Capital Inc." の完全一致だったため、こちらも社名を先頭に置く。
+  // 日本語(ルート)のタイトルは1位を取れている形なので触らない。
   const title = (lc === 'ja')
     ? 'BOARDWALK CAPITAL｜ボードウォーク・キャピタル株式会社'
-    : `BOARDWALK CAPITAL | ${stripTags(T(lc, 'hero.t1'))} ${stripTags(T(lc, 'hero.t2'))}`.replace(/\s+/g, ' ').trim();
+    : (lc === 'en')
+      ? 'Boardwalk Capital Inc. | Advisory · Incubation · Angel Investment'
+      : `BOARDWALK CAPITAL | ${stripTags(T(lc, 'hero.t1'))} ${stripTags(T(lc, 'hero.t2'))}`.replace(/\s+/g, ' ').trim();
   html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
   html = html.replace(/(<meta name="description" content=")[^"]*(")/, (mm, a, b) => a + desc + b);
   html = html.replace(/(<meta property="og:description" content=")[^"]*(")/, (mm, a, b) => a + desc + b);
