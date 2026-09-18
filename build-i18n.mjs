@@ -111,7 +111,8 @@ function build(lc, isRoot) {
     // og:locale を言語に合わせる
     html = html.replace(/(<meta property="og:locale" content=")[^"]*(")/, (mm, a, b) => a + (OG_LOCALE[lc] || 'en_US') + b);
     // サブフォルダから参照できるよう画像等の相対パスを絶対化(#アンカーは温存)
-    html = html.replace(/src="img\//g, 'src="/img/').replace(/url\((['"]?)img\//g, 'url($1/img/');
+    // href="img/..."(ヒーロー画像のpreload)も絶対化。/en/ 等から /en/img/... を読みに行って404になっていた
+    html = html.replace(/(src|href)="img\//g, '$1="/img/').replace(/url\((['"]?)img\//g, 'url($1/img/');
     // 文字体系別Webフォントを該当言語ページのみ注入(端末フォント任せ=豆腐/フォント混在を防ぐ。他言語ページは重くしない)。
     // CJK(ko/zh/zh-Hant)は基底CSSに書体指定が無いので<style>も注入。ar/hiは基底CSSに既定ありのためリンクのみ。
     const PERLANG = { ko:['Noto Sans KR','400;500;700;900'], zh:['Noto Sans SC','400;500;700;900'], 'zh-Hant':['Noto Sans TC','400;500;700;900'], ar:['Noto Sans Arabic','400;500;700'], hi:['Noto Sans Devanagari','400;500;700'] };

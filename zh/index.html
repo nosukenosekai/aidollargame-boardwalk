@@ -110,7 +110,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Shippori+Mincho:wght@600;700;800&family=Cinzel:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
-<link rel="preload" as="image" href="img/hero.webp" type="image/webp" fetchpriority="high" />
+<link rel="preload" as="image" href="/img/hero.webp" type="image/webp" fetchpriority="high" />
 <style>
 :root{
   --bg:#ffffff;--bg2:#f2f5fd;--panel:#ffffff;--navy:#172a78;
@@ -204,17 +204,18 @@ header.solid .lang-btn:hover{border-color:var(--blue)}
     linear-gradient(180deg,rgba(10,22,72,.34) 0%,rgba(10,22,72,.1) 32%,rgba(9,18,60,.5) 70%,rgba(7,14,48,.97) 100%),
     linear-gradient(105deg,rgba(16,34,110,.5) 0%,rgba(16,34,110,.12) 55%,transparent 100%);}
 .hero-inner{position:relative;z-index:2;width:100%;padding-bottom:9vh}
-.hero-eyebrow{display:flex;align-items:center;gap:16px;font-family:"Manrope";font-size:.72rem;letter-spacing:.34em;
+.hero-eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;font-family:"Manrope";font-weight:500;font-size:.72rem;letter-spacing:.34em;line-height:1.6;
   color:#cfe0ff;text-transform:uppercase;margin-bottom:30px;
   opacity:0;transform:translateY(16px);transition:.7s var(--ease) .05s}
 .hero.go .hero-eyebrow{opacity:1;transform:none}
 .hero-eyebrow::before{content:"";width:46px;height:1px;background:#cfe0ff}
+.hero-eyebrow .notranslate{font-weight:700;color:#fff}.hero-eyebrow .sep{opacity:.5}
 .hero h1{font-weight:700;font-size:clamp(2.4rem,5.6vw,5rem);line-height:1.24;letter-spacing:.02em;margin-bottom:30px;color:#fff}
 .hero h1 .l{display:block;overflow:hidden;padding-bottom:.06em}
 .hero h1 .l span{display:inline-block;transform:translateY(115%);opacity:0;transition:transform .75s var(--ease),opacity .75s var(--ease)}
 .hero.go h1 .l span{transform:none;opacity:1}
-.hero h1 .l:nth-child(1) span{transition-delay:.12s}
-.hero h1 .l:nth-child(2) span{transition-delay:.22s}
+.hero h1 .l:nth-child(2) span{transition-delay:.12s}
+.hero h1 .l:nth-child(3) span{transition-delay:.22s}
 .hero p.lead{max-width:46ch;color:#e3ecfb;font-size:clamp(1.05rem,1.4vw,1.25rem);font-weight:500;line-height:1.9;
   opacity:0;transform:translateY(20px);transition:.7s var(--ease) .34s}
 .hero.go p.lead{opacity:1;transform:none}
@@ -618,6 +619,7 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .hero{min-height:88vh}
   .hero-inner{padding-bottom:7vh}
   .hero h1{font-size:clamp(1.5rem,6.6vw,2rem);line-height:1.32;letter-spacing:.02em;margin-bottom:22px}
+  .hero-eyebrow .sep{display:none}.hero-eyebrow{letter-spacing:.22em}.hero-eyebrow::before{width:28px}
   .hero p.lead{font-size:1.02rem;line-height:1.85}
   .hero-cta{gap:10px;width:100%}
   .hero-cta .btn{flex:1;justify-content:center;padding:15px 16px;font-size:.76rem;letter-spacing:.06em}
@@ -652,11 +654,11 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   <div class="wrap nav">
     <nav class="navlinks">
       <a href="#top">TOP</a>
-      <a href="/about/">ABOUT</a>
-      <a href="/message/">CEO MESSAGE</a>
-      <a href="/portfolio/">PARTNERS</a>
-      <a href="/history/">HISTORY</a>
-      <a href="/events/">EVENTS</a>
+      <a href="/en/about/">ABOUT</a>
+      <a href="/en/message/">CEO MESSAGE</a>
+      <a href="/en/portfolio/">PARTNERS</a>
+      <a href="/en/history/">HISTORY</a>
+      <a href="/en/events/">EVENTS</a>
       <a href="#contact">CONTACT</a>
     </nav>
     <div class="lang">
@@ -674,11 +676,11 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
 <div class="mobile-menu" id="mobileMenu">
   <nav>
     <a href="#top">TOP</a>
-    <a href="/about/">ABOUT</a>
-    <a href="/message/">CEO MESSAGE</a>
-    <a href="/portfolio/">PARTNERS</a>
-    <a href="/history/">HISTORY</a>
-    <a href="/events/">EVENTS</a>
+    <a href="/en/about/">ABOUT</a>
+    <a href="/en/message/">CEO MESSAGE</a>
+    <a href="/en/portfolio/">PARTNERS</a>
+    <a href="/en/history/">HISTORY</a>
+    <a href="/en/events/">EVENTS</a>
     <a href="#contact">CONTACT</a>
   </nav>
 </div>
@@ -687,8 +689,8 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
 <section class="hero" id="top">
   <div class="hero-media"><img src="/img/hero.webp" alt="夕暮れの海に伸びる桟橋" width="1920" height="1280" fetchpriority="high" decoding="async" /></div>
   <div class="wrap hero-inner">
-    <div class="hero-eyebrow"><span data-i18n="hero.eyebrow">顾问 · 孵化 · 投资</span></div>
     <h1>
+      <span class="hero-eyebrow"><span class="notranslate" translate="no">Boardwalk Capital Inc.</span><span class="sep" aria-hidden="true">/</span><span data-i18n="hero.eyebrow">顾问 · 孵化 · 投资</span></span>
       <span class="l jp"><span data-i18n="hero.t1">为志在挑战的企业，</span></span>
       <span class="l jp"><span data-i18n="hero.t2">提供资本与经验。</span></span>
     </h1>
@@ -920,7 +922,7 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
 <footer>
   <div class="wrap foot">
     <a class="brand" href="#top" aria-label="BOARDWALK"><span class="wordmark notranslate" translate="no"><span>B</span><span class="s">OARD</span><span>W</span><span class="s">ALK</span></span></a>
-    <nav class="foot-nav" aria-label="サイトマップ"><a href="/">TOP</a><a href="/about/">会社概要</a><a href="/message/">代表メッセージ</a><a href="/portfolio/">投資先</a><a href="/history/">沿革</a><a href="/events/">登壇・イベント</a><a href="/#contact">お問い合わせ</a></nav>
+    <nav class="foot-nav" aria-label="サイトマップ"><a href="/zh/">Top</a><a href="/en/about/">About</a><a href="/en/message/">CEO Message</a><a href="/en/portfolio/">Portfolio</a><a href="/en/history/">History</a><a href="/en/events/">Events</a><a href="/zh/#contact">Contact</a></nav>
     <div class="foot-meta">
       <div class="sm foot-corp"><span data-i18n="foot.corpno">法人编号</span>: 5011001112084</div>
       <div class="sm"><a href="/privacy.html" style="color:inherit;text-decoration:underline;margin-right:18px">Privacy Policy</a>© 2016–2026 Boardwalk Capital Inc. <span data-i18n="foot.r">版权所有。</span></div>
