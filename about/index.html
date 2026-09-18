@@ -383,6 +383,21 @@ body[data-subpage] .page-hero + .pad{padding-top:48px}
 .foot-nav{display:flex;flex-wrap:wrap;gap:10px 26px;flex-basis:100%;order:3;padding-top:22px;border-top:1px solid rgba(255,255,255,.12)}
 .foot-nav a{color:rgba(255,255,255,.78);text-decoration:none;font-size:.86rem}.foot-nav a:hover{color:#fff;text-decoration:underline}
 @media(max-width:560px){.page-hero{padding:112px 0 20px}}
+/* 投資先の個別ページ /portfolio/<slug>/ */
+.co-card{display:grid;grid-template-columns:240px 1fr;gap:44px;align-items:start;background:#fff;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:14px;padding:40px}
+.co-logo{display:flex;align-items:center;justify-content:center;min-height:120px;background:#fff;border:1px solid var(--line-soft);border-radius:10px;padding:18px}
+.co-logo img{max-width:100%;max-height:84px;object-fit:contain}
+.co-logo .noimg{font-family:"Manrope";font-weight:700;color:var(--navy);text-align:center}
+.co-table{width:100%;border-collapse:collapse}
+.co-table th,.co-table td{padding:16px 0;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top;line-height:1.8}
+.co-table th{width:8em;color:var(--muted);font-weight:500;font-size:.92rem}
+.co-table a{color:var(--blue);word-break:break-all}
+.co-back{display:inline-block;margin-top:28px;color:var(--blue);text-decoration:none;font-weight:600}
+.co-others{margin-top:64px}
+.co-others h2{font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:18px}
+.co-others ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px 24px;padding:0}
+.co-others a{color:var(--text);text-decoration:none;font-size:.95rem}.co-others a:hover{color:var(--blue);text-decoration:underline}
+@media(max-width:720px){.co-card{grid-template-columns:1fr;gap:24px;padding:26px}}
 /* EVENT (登壇・イベント記録) */
 .event{background:linear-gradient(180deg,var(--bg2),var(--bg))}
 .event .sub{max-width:760px;margin-top:18px}
@@ -1200,7 +1215,7 @@ function applyLang(code){
   }else{
     const _desc=(T("hero.lead")||"").replace(/<[^>]+>/g,"");
     ["meta[name=\"description\"]","meta[property=\"og:description\"]","meta[name=\"twitter:description\"]"].forEach(s=>{const el=document.querySelector(s);if(el)el.setAttribute("content",_desc);});
-    document.title=code==="ja"?"BOARDWALK CAPITAL｜ボードウォーク・キャピタル株式会社":"Boardwalk Capital Inc. | Advisory · Incubation · Angel Investment";
+    document.title=code==="ja"?"BOARDWALK CAPITAL｜ボードウォーク・キャピタル株式会社（Boardwalk Capital Inc.）":"Boardwalk Capital Inc. | Advisory · Incubation · Angel Investment";
   }
   const m=LANGS.find(l=>l.code===code)||LANG_NAMES[code]||{label:code};
   document.getElementById("langLabel").textContent=(m.native||m.label);
@@ -1334,8 +1349,8 @@ function renderPartners(lang){
       ? [c[3],c[4]?"設立 "+c[4]:""].filter(Boolean).join("　/　")
       : (_est?"Founded "+_est:"");
     const inner=`<span class="nm">${c[0]}</span>${c[1]?`<small>${c[1]}</small>`:""}${biz?`<span class="biz">${biz}</span>`:""}${meta?`<span class="meta2">${meta}</span>`:""}`;
-    const u=CURL[c[0]];
-    return u?`<a class="pc" href="${u}" target="_blank" rel="noopener">${inner}<span class="ext">↗</span></a>`:`<div class="pc">${inner}</div>`;
+    const sl=PSLUG[c[0]];
+    return sl?`<a class="pc" href="/portfolio/${sl}/">${inner}<span class="ext">→</span></a>`:`<div class="pc">${inner}</div>`;
   }).join("");
 }
 function renderNews(lang){
@@ -1402,6 +1417,18 @@ const buildLogos=()=>PARTNERS.map(([sl,u,nm])=>{
   return u?`<a class="logo" href="${u}" target="_blank" rel="noopener" title="${nm}">${img}</a>`:`<div class="logo" title="${nm}">${img}</div>`;}).join("");
 if(mq)mq.innerHTML=buildLogos()+buildLogos();
 /* 企業名（日本語社名）→公式URL（グリッド用・全社） ※キスリー株式会社は確実な現行公式URLが確認できず未掲載 */
+/* 社名 → 当サイト内の個別ページ /portfolio/<slug>/ (build-pages.mjs が生成) */
+const PSLUG={
+"株式会社ベクトル":"vectorinc","株式会社ビジョン":"vision","株式会社アイスタイル":"istyle","株式会社eWeLL":"ewell",
+"株式会社ジーニー":"geniee","寶結株式会社":"houyou","GLM株式会社":"glm","株式会社FiNC Technologies":"finc",
+"fabbit株式会社":"fabbit","ドーナツ・ロボティクス株式会社":"donutrobotics","ミカタ少額短期保険株式会社":"mikata",
+"Digital Entertainment Asset":"dea","Telcoin":"telcoin","Conny & Co.":"connyandco","IP Nexus":"ipnexus",
+"ecobike株式会社":"ecobike","株式会社Fun Group":"fungroup","株式会社RECEPTIONIST":"receptionist",
+"株式会社アイデンティティー":"identity","株式会社Huber.":"huber","Welltool株式会社":"welltool","株式会社ドゥーファ":"dofa",
+"株式会社mgram":"mgram","エンタッチ株式会社":"entouch","株式会社FUN UP":"funup","エクスペリサス株式会社":"xperisus",
+"株式会社シェアスタッフ":"sharestaff","アクシオンリサーチ株式会社":"axion","株式会社BALEUM":"baleum",
+"the Babels, Inc.":"babels","キスリー株式会社":"qithree","株式会社JLBC":"jlbc","WQC株式会社":"wqctech"
+};
 const CURL={
 "GLM株式会社":"https://glm.jp/","株式会社ベクトル":"https://vectorinc.co.jp/","株式会社ビジョン":"https://www.vision-net.co.jp/",
 "株式会社アイスタイル":"https://www.istyle.co.jp/","株式会社ジーニー":"https://geniee.co.jp/",

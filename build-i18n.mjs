@@ -23,6 +23,7 @@ const I18N = new Function(m + ';return I18N;')();
 const NEWS = new Function(src.match(/const NEWS=\[[\s\S]*?\];/)[0] + ';return NEWS;')();
 const PCO = new Function(src.match(/const PCO=\[[\s\S]*?\n\];/)[0] + ';return PCO;')();
 const CURL = new Function(src.match(/const CURL=\{[\s\S]*?\};/)[0] + ';return CURL;')();
+const PSLUG = new Function(src.match(/const PSLUG=\{[\s\S]*?\};/)[0] + ';return PSLUG;')();
 const EVENTS = new Function(src.match(/const EVENTS=\[[\s\S]*?\n\];/)[0] + ';return EVENTS;')();
 const en = I18N.en;
 const T = (lc, k) => (I18N[lc] && I18N[lc][k] != null) ? I18N[lc][k] : en[k];
@@ -51,8 +52,8 @@ function renderPartners(lc, rootRelative) {
       ? [c[3], c[4] ? '設立 ' + c[4] : ''].filter(Boolean).join('　/　')
       : (est ? 'Founded ' + est : '');
     const inner = `<span class="nm">${c[0]}</span>${c[1] ? `<small>${c[1]}</small>` : ''}${biz ? `<span class="biz">${biz}</span>` : ''}${meta ? `<span class="meta2">${meta}</span>` : ''}`;
-    const u = CURL[c[0]];
-    return u ? `<a class="pc" href="${u}" target="_blank" rel="noopener">${inner}<span class="ext">\u2197</span></a>` : `<div class="pc">${inner}</div>`;
+    const sl = PSLUG[c[0]];
+    return sl ? `<a class="pc" href="/portfolio/${sl}/">${inner}<span class="ext">\u2192</span></a>` : `<div class="pc">${inner}</div>`;
   }).join('');
 }
 
@@ -129,7 +130,7 @@ function build(lc, isRoot) {
   // h1="Boardwalk Capital Inc." の完全一致だったため、こちらも社名を先頭に置く。
   // 日本語(ルート)のタイトルは1位を取れている形なので触らない。
   const title = (lc === 'ja')
-    ? 'BOARDWALK CAPITAL｜ボードウォーク・キャピタル株式会社'
+    ? 'BOARDWALK CAPITAL｜ボードウォーク・キャピタル株式会社（Boardwalk Capital Inc.）'
     : (lc === 'en')
       ? 'Boardwalk Capital Inc. | Advisory · Incubation · Angel Investment'
       : `BOARDWALK CAPITAL | ${stripTags(T(lc, 'hero.t1'))} ${stripTags(T(lc, 'hero.t2'))}`.replace(/\s+/g, ' ').trim();

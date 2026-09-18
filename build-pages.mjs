@@ -143,17 +143,149 @@ function build(pg) {
 
 const res = PAGES.map(build);
 
+/* ─────────────────────────────────────────────────────────────
+   投資先の個別ページ /portfolio/<slug>/ (33社)
+   旧サイトは partner/vision.php などを1社ずつ持ち、Googleがそれを
+   「株式会社ビジョン Vision Inc.」のようなサイトリンクとして出していた。同じ粒度で持つ。
+   ───────────────────────────────────────────────────────────── */
+const PCO = new Function(src.match(/const PCO=\[[\s\S]*?\n\];/)[0] + ';return PCO;')();
+const CURL = new Function(src.match(/const CURL=\{[\s\S]*?\};/)[0] + ';return CURL;')();
+const PSLUG = new Function(src.match(/const PSLUG=\{[\s\S]*?\};/)[0] + ';return PSLUG;')();
+// slug → ロゴファイル(旧サイトから回収した img/partner/co/ の名前)。無い会社は社名の文字で代替
+const LOGO = {
+  vectorinc: 'vectorinc.webp', vision: 'vision.webp', istyle: 'istyle.webp', ewell: 'ewell.webp',
+  geniee: 'geniee.webp', houyou: 'houyou.webp', glm: 'glm.webp', finc: 'finc.webp', fabbit: 'fabbit.webp',
+  donutrobotics: 'donutrobotics.webp', dea: 'dea.webp', telcoin: 'telcoin.webp', ipnexus: 'ipnexus.webp',
+  ecobike: 'ecobike.webp', fungroup: 'fun.webp', receptionist: 'delighted.webp', identity: 'identity.webp',
+  huber: 'huber.webp', welltool: 'welltool.webp', dofa: 'dofa.svg', mgram: 'mgram.webp', entouch: 'entouch.webp',
+  funup: 'fun-up.webp', xperisus: 'xperisus.webp', sharestaff: 'petitjob.webp', axion: 'axion.webp',
+  baleum: 'baleum.webp', babels: 'babels.webp', qithree: 'qithree.webp', jlbc: 'jlbc.webp', wqctech: 'wqctech.webp',
+};
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+function buildCompany(c) {
+  const [name, en, bizObj, rep, est] = c;
+  const slug = PSLUG[name];
+  if (!slug) return null;
+  const biz = bizObj ? (bizObj.ja || bizObj.en || '') : '';
+  const url = CURL[name] || '';
+  const disp = en ? `${name}（${en}）` : name;
+  const title = `${disp}｜${CO} 投資先`;
+  const desc = `${CO}（${CO_EN}）の投資先・パートナー企業、${disp}のご紹介。${biz ? '事業内容：' + biz + '。' : ''}${rep ? rep + '。' : ''}${est ? '設立 ' + est + '。' : ''}`;
+  let html = src;
+
+  html = html.replace(/<link rel="alternate" hreflang="[^"]*"[^>]*>\s*/g, '');
+  html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`);
+  const setMeta = (sel, val) => { html = html.replace(new RegExp(`(${sel} content=")[^"]*(")`), (m, a, b) => a + esc(val) + b); };
+  setMeta('<meta name="description"', desc);
+  setMeta('<meta property="og:description"', desc);
+  setMeta('<meta name="twitter:description"', desc);
+  setMeta('<meta property="og:title"', title);
+  setMeta('<meta name="twitter:title"', title);
+  setMeta('<meta property="og:url"', `${ORIGIN}/portfolio/${slug}/`);
+  html = html.replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${ORIGIN}/portfolio/${slug}/" />`);
+
+  const ld = [
+    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: CO, item: `${ORIGIN}/` },
+      { '@type': 'ListItem', position: 2, name: '投資先・パートナー企業', item: `${ORIGIN}/portfolio/` },
+      { '@type': 'ListItem', position: 3, name: name, item: `${ORIGIN}/portfolio/${slug}/` },
+    ] },
+    Object.assign({ '@context': 'https://schema.org', '@type': 'Organization', name },
+      en ? { alternateName: en } : {}, url ? { url } : {}, biz ? { description: biz } : {},
+      est ? { foundingDate: est.replace(/年/, '-').replace(/月.*$/, '').replace(/-(\d)$/, '-0$1') } : {}),
+  ];
+  html = html.replace('</head>', ld.map(o => `<script type="application/ld+json">\n${JSON.stringify(o, null, 2)}\n</script>`).join('\n') + '\n</head>');
+
+  html = html.replace(/<body([^>]*)>/, (m, a) => `<body${a} data-subpage="portfolio-${slug}">`);
+  html = html.replace(/<div id="intro">[\s\S]*?<\/div>\s*<\/div>\s*/, '');
+
+  const logo = LOGO[slug]
+    ? `<img src="/img/partner/co/${LOGO[slug]}" alt="${esc(name)} ロゴ" width="240" height="84" loading="eager" decoding="async">`
+    : `<span class="noimg">${esc(en || name)}</span>`;
+  const rows = [
+    ['社名', esc(name) + (en ? `<br><span style="color:var(--muted)">${esc(en)}</span>` : '')],
+    biz ? ['事業内容', esc(biz)] : null,
+    rep ? ['代表者', esc(rep)] : null,
+    est ? ['設立', esc(est)] : null,
+    url ? ['公式サイト', `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a>`] : null,
+  ].filter(Boolean).map(([k, v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join('');
+  const others = PCO.filter(o => o[0] !== name && PSLUG[o[0]])
+    .map(o => `<li><a href="/portfolio/${PSLUG[o[0]]}/">${esc(o[0])}</a></li>`).join('');
+
+  const main = `<section class="page-hero">
+  <div class="wrap">
+    <nav class="crumb" aria-label="パンくず"><a href="/">TOP</a> ／ <a href="/portfolio/">投資先・パートナー企業</a> ／ <span>${esc(name)}</span></nav>
+    <span class="eyebrow">PORTFOLIO</span>
+    <h1 class="h1p jp">${esc(name)}</h1>
+    <p class="lead-p jp">${CO}（${CO_EN}）の投資先・パートナー企業です。</p>
+  </div>
+</section>
+
+<section class="pad">
+  <div class="wrap">
+    <div class="co-card">
+      <div class="co-logo">${logo}</div>
+      <table class="co-table"><tbody>${rows}</tbody></table>
+    </div>
+    <a class="co-back" href="/portfolio/">← 投資先・パートナー企業の一覧へ</a>
+    <div class="co-others">
+      <h2 class="jp">その他の投資先・パートナー企業</h2>
+      <ul>${others}</ul>
+    </div>
+  </div>
+</section>
+
+`;
+  const start = html.indexOf('<section class="hero"');
+  const end = html.indexOf('<footer>');
+  html = html.slice(0, start) + main + sectionById(src, 'contact') + '\n\n' + html.slice(end);
+  html = html.replace(/href="#([a-zA-Z0-9_-]+)"/g, (m, id) => id === 'contact' ? m : `href="/#${id}"`);
+  html = html.replace(/(src|href)="img\//g, '$1="/img/').replace(/url\((['"]?)img\//g, 'url($1/img/');
+
+  const dir = join(OUT, 'portfolio', slug);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, 'index.html'), html, 'utf8');
+  return slug;
+}
+const coSlugs = PCO.map(buildCompany).filter(Boolean);
+
+/* 代表メッセージ: 那珂通雅の Person 構造化データ / 投資先一覧: ItemList */
+{
+  const f = join(OUT, 'message', 'index.html');
+  let h = readFileSync(f, 'utf8');
+  const person = {
+    '@context': 'https://schema.org', '@type': 'Person', name: '那珂通雅', alternateName: 'Michimasa Naka',
+    jobTitle: '代表取締役社長', worksFor: { '@type': 'Organization', name: CO, alternateName: CO_EN, url: `${ORIGIN}/` },
+    alumniOf: '慶應義塾大学', sameAs: ['https://ja.wikipedia.org/wiki/%E9%82%A3%E7%8F%82%E9%80%9A%E9%9B%85'],
+  };
+  h = h.replace('</head>', `<script type="application/ld+json">\n${JSON.stringify(person, null, 2)}\n</script>\n</head>`);
+  writeFileSync(f, h, 'utf8');
+}
+{
+  const f = join(OUT, 'portfolio', 'index.html');
+  let h = readFileSync(f, 'utf8');
+  const list = {
+    '@context': 'https://schema.org', '@type': 'ItemList', name: `${CO}の投資先・パートナー企業`,
+    itemListElement: PCO.filter(c => PSLUG[c[0]]).map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c[0], url: `${ORIGIN}/portfolio/${PSLUG[c[0]]}/` })),
+  };
+  h = h.replace('</head>', `<script type="application/ld+json">\n${JSON.stringify(list, null, 2)}\n</script>\n</head>`);
+  writeFileSync(f, h, 'utf8');
+}
+
 // sitemap に下層ページを追記(build-i18n が書いたものに足す・重複は足さない)
 const smPath = join(OUT, 'sitemap.xml');
 let sm = readFileSync(smPath, 'utf8');
 const lastmod = new Date().toISOString().slice(0, 10);
-for (const pg of PAGES) {
-  const loc = `${ORIGIN}/${pg.slug}/`;
-  if (sm.includes(`<loc>${loc}</loc>`)) continue;
-  sm = sm.replace('</urlset>', `  <url><loc>${loc}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>\n</urlset>`);
-}
+const addLoc = (loc, pri) => {
+  if (sm.includes(`<loc>${loc}</loc>`)) return;
+  sm = sm.replace('</urlset>', `  <url><loc>${loc}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>${pri}</priority></url>\n</urlset>`);
+};
+for (const pg of PAGES) addLoc(`${ORIGIN}/${pg.slug}/`, '0.9');
+for (const sl of coSlugs) addLoc(`${ORIGIN}/portfolio/${sl}/`, '0.6');
 writeFileSync(smPath, sm, 'utf8');
 
 console.log('下層ページ生成:');
 res.forEach(r => console.log('  ', '/' + r.slug + '/', r.bytes, 'bytes'));
+console.log('  投資先の個別ページ:', coSlugs.length, '社');
 console.log('  sitemap.xml に追記済み');
