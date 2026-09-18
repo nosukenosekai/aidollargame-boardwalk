@@ -387,6 +387,17 @@ section{position:relative}
 .news-list.show-all>.news-card{opacity:1;transform:none;transition-delay:0s}
 .news-more{display:block;margin:40px auto 0;padding:14px 36px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--navy);font-family:"Manrope";font-weight:600;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:border-color .25s var(--ease),color .25s var(--ease),box-shadow .25s var(--ease)}
 .news-more:hover{border-color:var(--blue);color:var(--blue);box-shadow:0 14px 32px rgba(42,83,230,.14)}
+/* 下層ページ(/about/ /message/ /portfolio/ /history/ /events/) */
+.page-hero{padding:150px 0 30px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
+.crumb{font-family:"Manrope";font-size:.8rem;letter-spacing:.08em;color:var(--muted);margin-bottom:20px}
+.crumb a{color:var(--blue);text-decoration:none}.crumb a:hover{text-decoration:underline}
+.page-hero .eyebrow{display:block;margin-bottom:14px}
+.h1p{font-weight:700;font-size:clamp(2.2rem,4.4vw,3.6rem);line-height:1.25;color:var(--navy);letter-spacing:.01em}
+.page-hero .lead-p{margin-top:18px;color:var(--muted);max-width:44em;line-height:1.9}
+body[data-subpage] .page-hero + .pad{padding-top:48px}
+.foot-nav{display:flex;flex-wrap:wrap;gap:10px 26px;flex-basis:100%;order:3;padding-top:22px;border-top:1px solid rgba(255,255,255,.12)}
+.foot-nav a{color:rgba(255,255,255,.78);text-decoration:none;font-size:.86rem}.foot-nav a:hover{color:#fff;text-decoration:underline}
+@media(max-width:560px){.page-hero{padding:112px 0 20px}}
 /* EVENT (登壇・イベント記録) */
 .event{background:linear-gradient(180deg,var(--bg2),var(--bg))}
 .event .sub{max-width:760px;margin-top:18px}
@@ -625,11 +636,11 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   <div class="wrap nav">
     <nav class="navlinks">
       <a href="#top">TOP</a>
-      <a href="#philosophy">ABOUT</a>
-      <a href="#message">CEO MESSAGE</a>
-      <a href="#partners">PARTNERS</a>
-      <a href="#news">HISTORY</a>
-      <a href="#event">EVENTS</a>
+      <a href="/about/">ABOUT</a>
+      <a href="/message/">CEO MESSAGE</a>
+      <a href="/portfolio/">PARTNERS</a>
+      <a href="/history/">HISTORY</a>
+      <a href="/events/">EVENTS</a>
       <a href="#contact">CONTACT</a>
     </nav>
     <div class="lang">
@@ -647,11 +658,11 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
 <div class="mobile-menu" id="mobileMenu">
   <nav>
     <a href="#top">TOP</a>
-    <a href="#philosophy">ABOUT</a>
-    <a href="#message">CEO MESSAGE</a>
-    <a href="#partners">PARTNERS</a>
-    <a href="#news">HISTORY</a>
-    <a href="#event">EVENTS</a>
+    <a href="/about/">ABOUT</a>
+    <a href="/message/">CEO MESSAGE</a>
+    <a href="/portfolio/">PARTNERS</a>
+    <a href="/history/">HISTORY</a>
+    <a href="/events/">EVENTS</a>
     <a href="#contact">CONTACT</a>
   </nav>
 </div>
@@ -893,6 +904,7 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
 <footer>
   <div class="wrap foot">
     <a class="brand" href="#top" aria-label="BOARDWALK"><span class="wordmark notranslate" translate="no"><span>B</span><span class="s">OARD</span><span>W</span><span class="s">ALK</span></span></a>
+    <nav class="foot-nav" aria-label="サイトマップ"><a href="/">TOP</a><a href="/about/">会社概要</a><a href="/message/">代表メッセージ</a><a href="/portfolio/">投資先</a><a href="/history/">沿革</a><a href="/events/">登壇・イベント</a><a href="/#contact">お問い合わせ</a></nav>
     <div class="foot-meta">
       <div class="sm foot-corp"><span data-i18n="foot.corpno">कॉर्पोरेट संख्या</span>: 5011001112084</div>
       <div class="sm"><a href="/privacy.html" style="color:inherit;text-decoration:underline;margin-right:18px">Privacy Policy</a>© 2016–2026 Boardwalk Capital Inc. <span data-i18n="foot.r">सर्वाधिकार सुरक्षित।</span></div>
@@ -1296,9 +1308,15 @@ function applyLang(code){
   renderEvents(code);
   renderPartners(code);
   /* 言語別に title / meta description を更新(常に日本語だった問題を解消・共有/翻訳/クロール時の言語を正す) */
-  const _desc=(T("hero.lead")||"").replace(/<[^>]+>/g,"");
-  ["meta[name=\"description\"]","meta[property=\"og:description\"]","meta[name=\"twitter:description\"]"].forEach(s=>{const el=document.querySelector(s);if(el)el.setAttribute("content",_desc);});
-  document.title=code==="ja"?"BOARDWALK CAPITAL｜ボードウォーク・キャピタル株式会社":"BOARDWALK CAPITAL | Advisory · Incubation · Angel Investment";
+  /* ページ本来の言語で表示中はHTMLのタイトル・説明文を維持(下層ページや英語ページのタイトルをJSで潰さない) */
+  if(code===PAGE_LANG||document.body.dataset.subpage){
+    document.title=PAGE_TITLE;
+    ["meta[name=\"description\"]","meta[property=\"og:description\"]","meta[name=\"twitter:description\"]"].forEach(s=>{const el=document.querySelector(s);if(el&&PAGE_DESC)el.setAttribute("content",PAGE_DESC);});
+  }else{
+    const _desc=(T("hero.lead")||"").replace(/<[^>]+>/g,"");
+    ["meta[name=\"description\"]","meta[property=\"og:description\"]","meta[name=\"twitter:description\"]"].forEach(s=>{const el=document.querySelector(s);if(el)el.setAttribute("content",_desc);});
+    document.title=code==="ja"?"BOARDWALK CAPITAL｜ボードウォーク・キャピタル株式会社":"Boardwalk Capital Inc. | Advisory · Incubation · Angel Investment";
+  }
   const m=LANGS.find(l=>l.code===code)||LANG_NAMES[code]||{label:code};
   document.getElementById("langLabel").textContent=(m.native||m.label);
   document.querySelectorAll("#langMenu button").forEach(b=>b.classList.toggle("active",b.dataset.code===code));
@@ -1405,7 +1423,7 @@ function renderEvents(lang){
   const el=document.getElementById("eventList");if(!el)return;
   el.innerHTML=EVENTS.map(n=>{
     const ttl=(n.title[lang]||n.title.en),a=ttl.replace(/"/g,"&quot;");
-    const thumb=n.img?`<div class="thumb"><img src="${n.img}" alt="${a}" loading="lazy" decoding="async"></div>`:"";
+    const thumb=n.img?`<div class="thumb"><img src="/${n.img}" alt="${a}" loading="lazy" decoding="async"></div>`:"";
     const cat=(n.cat&&(n.cat[lang]||n.cat.en))||"";
     const cls="news-card ev-card"+(n.img?"":" no-img");
     const body=`<div class="body"><div class="meta"><span class="date">${n.date}</span>${cat?`<span class="cat">${cat}</span>`:""}</div><div class="ttl">${ttl}</div>${n.url?'<span class="ext">Detail →</span>':""}</div>`;
@@ -1440,7 +1458,7 @@ function renderNews(lang){
   el.innerHTML=NEWS.map(n=>{
     const cat=(n.cat&&(n.cat[lang]||n.cat.en))||"",ttl=(n.title[lang]||n.title.en);
     const a=ttl.replace(/"/g,"&quot;");
-    const thumb=n.logo?`<div class="thumb logo"><img src="${n.logo}" alt="${a}" loading="lazy" decoding="async"></div>`:n.img?`<div class="thumb"><img src="${n.img}" alt="${a}" loading="lazy" decoding="async"></div>`:"";
+    const thumb=n.logo?`<div class="thumb logo"><img src="/${n.logo}" alt="${a}" loading="lazy" decoding="async"></div>`:n.img?`<div class="thumb"><img src="/${n.img}" alt="${a}" loading="lazy" decoding="async"></div>`:"";
     const hasImg=n.logo||n.img;
     return `<div class="news-card${hasImg?"":" no-img"}"><div class="body"><div class="meta"><span class="date">${n.date}</span><span class="cat">${cat}</span></div><div class="ttl">${ttl}</div></div>${thumb}</div>`;
   }).join("");
@@ -1455,6 +1473,10 @@ const _url=_p.get("lang");
 
 /* 言語別静的ページ(/en/ 等)は <html data-lang="xx"> で当該言語を固定 */
 const _forced=document.documentElement.getAttribute("data-lang");
+/* このページ本来の言語とタイトル(applyLangの初回呼び出しより前に確定させる) */
+const PAGE_LANG=_forced||"ja";
+const PAGE_TITLE=document.title;
+const PAGE_DESC=(document.querySelector('meta[name="description"]')||{}).content||"";
 /* クローラ(Googlebot等)には自動判定をかけない。
    かけると、日本語の正規URL(/)が「英語ページ」としてインデックスされ、日本語検索での評価が落ちる。
    2026-09-01 実測: 「ボードウォーク・キャピタル」でヒットする当サイトのタイトル・説明文が英語になっていた。
@@ -1493,7 +1515,7 @@ const buildLogos=()=>PARTNERS.map(([sl,u,nm])=>{
   const ext=sl==="dofa"?"svg":"webp";
   const img=`<img src="/img/partner/co/${sl}.${ext}" alt="${nm}" loading="lazy" decoding="async">`;
   return u?`<a class="logo" href="${u}" target="_blank" rel="noopener" title="${nm}">${img}</a>`:`<div class="logo" title="${nm}">${img}</div>`;}).join("");
-mq.innerHTML=buildLogos()+buildLogos();
+if(mq)mq.innerHTML=buildLogos()+buildLogos();
 /* 企業名（日本語社名）→公式URL（グリッド用・全社） ※キスリー株式会社は確実な現行公式URLが確認できず未掲載 */
 const CURL={
 "GLM株式会社":"https://glm.jp/","株式会社ベクトル":"https://vectorinc.co.jp/","株式会社ビジョン":"https://www.vision-net.co.jp/",
@@ -1558,7 +1580,7 @@ const hero=document.querySelector(".hero");
 /* オープニング演出 → ヒーロー始動。約1.5秒で自動終了、スクロール/タップ/キーで即スキップ。 */
 (function(){
   const intro=document.getElementById("intro");
-  function go(){hero.classList.add("go");}
+  function go(){if(hero)hero.classList.add("go");}
   if(!intro){go();return;}
   document.body.classList.add("lock");
   let done=false;
@@ -1576,7 +1598,8 @@ const hero=document.querySelector(".hero");
 
 /* header solid on scroll */
 const hdr=document.getElementById("hdr");
-addEventListener("scroll",()=>hdr.classList.toggle("solid",scrollY>40),{passive:true});
+const _sub=!!document.body.dataset.subpage;if(_sub)hdr.classList.add("solid");
+addEventListener("scroll",()=>hdr.classList.toggle("solid",_sub||scrollY>40),{passive:true});
 
 /* reveal — re-triggers every time an element enters the viewport */
 function countUp(el){
