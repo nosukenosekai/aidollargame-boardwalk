@@ -1,5 +1,5 @@
 /* 下層ページ生成（日本語・英語）
-   日本語: /about/ /message/ /portfolio/ /history/ /events/ と /portfolio/<slug>/（33社）
+   日本語: /about/ /message/ /portfolio/ /history/ /events/ と /portfolio/<slug>/（35社）
    英語  : /en/about/ … /en/portfolio/<slug>/ …（同じ構成）
 
    トップ（index.html / en/index.html）を元に、そのページで見せるセクションだけを残した独立ページを書き出す。
@@ -60,13 +60,13 @@ const PAGES = [
     sections: ['partners', 'movies', 'contact'],
     ja: {
       h1: '投資先・パートナー企業', title: `投資先・パートナー企業｜${CO}（${CO_EN}）`,
-      desc: `${CO}の投資先・パートナー企業33社。ベクトル、ビジョン、アイスタイル（@cosme）、ジーニー、eWeLL、GLM、FiNC Technologies ほか。各社の事業内容・代表者・設立年を掲載しています。`,
-      lead: 'ボードウォーク・キャピタルが出資・支援してきた33社です。各社の事業内容・代表者・設立年を掲載しています。',
+      desc: `${CO}の投資先・パートナー企業35社。ベクトル、ビジョン、アイスタイル（@cosme）、ジーニー、eWeLL、GLM、FiNC Technologies ほか。各社の事業内容・代表者・設立年を掲載しています。`,
+      lead: 'ボードウォーク・キャピタルが出資・支援してきた35社です。各社の事業内容・代表者・設立年を掲載しています。',
     },
     en: {
       h1: 'Portfolio & Partners', title: `Portfolio & Partners | ${CO_EN}`,
-      desc: `The 33 portfolio and partner companies of ${CO_EN}, including VECTOR, Vision, istyle (@cosme), GENIEE, eWeLL, GLM and FiNC Technologies.`,
-      lead: `The 33 companies ${CO_EN} has invested in and supported, with each company's business and founding year.`,
+      desc: `The 35 portfolio and partner companies of ${CO_EN}, including VECTOR, Vision, istyle (@cosme), GENIEE, eWeLL, GLM and FiNC Technologies.`,
+      lead: `The 35 companies ${CO_EN} has invested in and supported, with each company's business and founding year.`,
     },
   },
   {
@@ -209,7 +209,7 @@ ${body}`;
   return `${base}${path}`;
 }
 
-/* ── 投資先の個別ページ(33社) ── */
+/* ── 投資先の個別ページ(35社) ── */
 const srcJa = SRC.ja;
 const PCO = new Function(srcJa.match(/const PCO=\[[\s\S]*?\n\];/)[0] + ';return PCO;')();
 const CURL = new Function(srcJa.match(/const CURL=\{[\s\S]*?\};/)[0] + ';return CURL;')();
