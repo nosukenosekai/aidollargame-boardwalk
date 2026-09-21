@@ -596,9 +596,9 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .pad{padding:84px 0}
   .philo .grid,.contact .grid{grid-template-columns:1fr;gap:42px}
   .philo .frame img{height:340px}
-  /* CEO message: 縦積み＋写真は横長で短く */
+  /* CEO message: 縦積み。写真は切り抜かず全体を見せる(横長に切ると顔のアップになるため) */
   .message .grid{grid-template-columns:1fr;gap:28px;margin-top:40px}
-  .message .portrait img{aspect-ratio:4/3;object-position:center 22%}
+  .message .portrait{max-width:400px}
   .message .lead-q{font-size:1.35rem}
   .message .body p{font-size:1.05rem;line-height:1.85;margin-top:18px}
   .message .sign{margin-top:28px;padding-top:22px}
@@ -633,7 +633,6 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .stat{padding:30px 22px}
   .stat .n{font-size:2.7rem}
   .philo .body,.svc-row .mid p,.message .body p,.sub{font-size:1.02rem}
-  .message .portrait img{aspect-ratio:5/4}
   .ct-head{margin-bottom:34px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -735,7 +734,7 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
     <span class="eyebrow r">CEO MESSAGE</span>
     <h2 class="h2 jp kx d1" data-i18n="msg.title" data-i18n-html>अधिक से अधिक ऐसे जापानी तैयार करना<br><span class="accent">जो विश्व मंच पर प्रतिस्पर्धा कर सकें।</span></h2>
     <div class="grid">
-      <div class="portrait r-img"><img src="/img/message/naka.jpg" alt="那珂 通雅" width="900" height="1200" loading="lazy" decoding="async" data-parallax /></div>
+      <div class="portrait r-img"><img src="/img/message/naka.jpg" alt="那珂 通雅" width="900" height="1200" loading="lazy" decoding="async" /></div>
       <div class="body r d1">
         <p class="lead-q jp" data-i18n="msg.lead" data-i18n-html>यह विश्वास मैं वर्षों से रखता आया हूँ — और यही बोर्डवॉक कैपिटल का प्रारंभ-बिंदु है।</p>
         <p class="jp" data-i18n="msg.p1">35 वर्षों से अधिक समय तक मैंने अंतरराष्ट्रीय वित्त में काम किया और वैश्विक बाज़ारों के विस्तार तथा बदलाव की गति को निकट से महसूस किया। उन वर्षों में, कभी विश्व की सबसे मजबूत मानी जाने वाली जापानी कंपनियाँ, तकनीक और प्रतिभाएँ शायद ही बढ़ पाईं। समष्टि दृष्टि से भी, सरकार और बैंक ऑफ जापान की नीतियाँ अपनी सीमा के निकट हैं।</p>

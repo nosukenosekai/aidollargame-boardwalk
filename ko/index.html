@@ -596,9 +596,9 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .pad{padding:84px 0}
   .philo .grid,.contact .grid{grid-template-columns:1fr;gap:42px}
   .philo .frame img{height:340px}
-  /* CEO message: 縦積み＋写真は横長で短く */
+  /* CEO message: 縦積み。写真は切り抜かず全体を見せる(横長に切ると顔のアップになるため) */
   .message .grid{grid-template-columns:1fr;gap:28px;margin-top:40px}
-  .message .portrait img{aspect-ratio:4/3;object-position:center 22%}
+  .message .portrait{max-width:400px}
   .message .lead-q{font-size:1.35rem}
   .message .body p{font-size:1.05rem;line-height:1.85;margin-top:18px}
   .message .sign{margin-top:28px;padding-top:22px}
@@ -633,7 +633,6 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .stat{padding:30px 22px}
   .stat .n{font-size:2.7rem}
   .philo .body,.svc-row .mid p,.message .body p,.sub{font-size:1.02rem}
-  .message .portrait img{aspect-ratio:5/4}
   .ct-head{margin-bottom:34px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -736,7 +735,7 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
     <span class="eyebrow r">CEO MESSAGE</span>
     <h2 class="h2 jp kx d1" data-i18n="msg.title" data-i18n-html>세계 무대에서 통하는<br><span class="accent">일본의 리더를 한 명이라도 더 키우고 싶습니다.</span></h2>
     <div class="grid">
-      <div class="portrait r-img"><img src="/img/message/naka.jpg" alt="那珂 通雅" width="900" height="1200" loading="lazy" decoding="async" data-parallax /></div>
+      <div class="portrait r-img"><img src="/img/message/naka.jpg" alt="那珂 通雅" width="900" height="1200" loading="lazy" decoding="async" /></div>
       <div class="body r d1">
         <p class="lead-q jp" data-i18n="msg.lead" data-i18n-html>그것은 제가 오랜 세월 품어온 신념이자, 보드워크 캐피탈의 원점입니다.</p>
         <p class="jp" data-i18n="msg.p1">35년 이상 국제 금융의 세계에서 싸우며, 글로벌 시장의 규모와 변화의 속도를 온몸으로 느껴 왔습니다. 그동안 세계 최강이라 불리던 일본의 기업·기술력·인재는 거의 성장하지 못했습니다. 거시적 관점에서도 정부와 Bank of Japan의 정책은 이미 한계에 가까워지고 있습니다.</p>

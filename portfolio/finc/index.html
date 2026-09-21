@@ -584,9 +584,9 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .pad{padding:84px 0}
   .philo .grid,.contact .grid{grid-template-columns:1fr;gap:42px}
   .philo .frame img{height:340px}
-  /* CEO message: 縦積み＋写真は横長で短く */
+  /* CEO message: 縦積み。写真は切り抜かず全体を見せる(横長に切ると顔のアップになるため) */
   .message .grid{grid-template-columns:1fr;gap:28px;margin-top:40px}
-  .message .portrait img{aspect-ratio:4/3;object-position:center 22%}
+  .message .portrait{max-width:400px}
   .message .lead-q{font-size:1.35rem}
   .message .body p{font-size:1.05rem;line-height:1.85;margin-top:18px}
   .message .sign{margin-top:28px;padding-top:22px}
@@ -621,7 +621,6 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .stat{padding:30px 22px}
   .stat .n{font-size:2.7rem}
   .philo .body,.svc-row .mid p,.message .body p,.sub{font-size:1.02rem}
-  .message .portrait img{aspect-ratio:5/4}
   .ct-head{margin-bottom:34px}
 }
 @media(prefers-reduced-motion:reduce){

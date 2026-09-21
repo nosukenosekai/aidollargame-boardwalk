@@ -596,9 +596,9 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .pad{padding:84px 0}
   .philo .grid,.contact .grid{grid-template-columns:1fr;gap:42px}
   .philo .frame img{height:340px}
-  /* CEO message: 縦積み＋写真は横長で短く */
+  /* CEO message: 縦積み。写真は切り抜かず全体を見せる(横長に切ると顔のアップになるため) */
   .message .grid{grid-template-columns:1fr;gap:28px;margin-top:40px}
-  .message .portrait img{aspect-ratio:4/3;object-position:center 22%}
+  .message .portrait{max-width:400px}
   .message .lead-q{font-size:1.35rem}
   .message .body p{font-size:1.05rem;line-height:1.85;margin-top:18px}
   .message .sign{margin-top:28px;padding-top:22px}
@@ -633,7 +633,6 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
   .stat{padding:30px 22px}
   .stat .n{font-size:2.7rem}
   .philo .body,.svc-row .mid p,.message .body p,.sub{font-size:1.02rem}
-  .message .portrait img{aspect-ratio:5/4}
   .ct-head{margin-bottom:34px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -736,7 +735,7 @@ body.menu-open .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45
     <span class="eyebrow r">CEO MESSAGE</span>
     <h2 class="h2 jp kx d1" data-i18n="msg.title" data-i18n-html>培育更多<br><span class="accent">在世界舞台上竞争的日本领导者。</span></h2>
     <div class="grid">
-      <div class="portrait r-img"><img src="/img/message/naka.jpg" alt="那珂 通雅" width="900" height="1200" loading="lazy" decoding="async" data-parallax /></div>
+      <div class="portrait r-img"><img src="/img/message/naka.jpg" alt="那珂 通雅" width="900" height="1200" loading="lazy" decoding="async" /></div>
       <div class="body r d1">
         <p class="lead-q jp" data-i18n="msg.lead" data-i18n-html>这是我多年来坚持的信念，也正是 Boardwalk Capital 的起点。</p>
         <p class="jp" data-i18n="msg.p1">三十五年多来，我在国际金融领域奋战，亲身感受到全球市场的规模与变化的速度。在这些年间，曾被誉为世界最强的日本企业、技术与人才几乎停滞不前。从宏观角度来看，政府与 Bank of Japan 的政策也已接近极限。</p>
