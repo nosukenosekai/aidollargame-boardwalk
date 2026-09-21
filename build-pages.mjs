@@ -222,6 +222,7 @@ const LOGO = {
   huber: 'huber.webp', welltool: 'welltool.webp', dofa: 'dofa.svg', mgram: 'mgram.webp', entouch: 'entouch.webp',
   funup: 'fun-up.webp', xperisus: 'xperisus.webp', sharestaff: 'petitjob.webp', axion: 'axion.webp',
   baleum: 'baleum.webp', babels: 'babels.webp', qithree: 'qithree.webp', jlbc: 'jlbc.webp', wqctech: 'wqctech.webp',
+  bravegroup: 'bravegroup.webp', nextone: 'nextone.webp', hrcloud: 'hrcloud.webp',
 };
 
 function buildCompany(c, lang) {
